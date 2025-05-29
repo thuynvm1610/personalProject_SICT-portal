@@ -12,12 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .main-content {
-            margin-left: 16.6667%; /* Đẩy phần main-content sang phải bằng chiều rộng sidebar */
-            padding: 20px; /* Có thể tùy chỉnh */
-        }
-    </style>
 </head>
 
 <body>
@@ -30,6 +24,7 @@
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item active">
+                        <span class="active__subItem"></span>
                         <form method="get" action="admin">
                             <input type="hidden" name="action" value="dashboard">
                             <button type="submit" class="sidebar-btn">
@@ -109,82 +104,86 @@
                 </ul>
             </div>
             <!-- Main content -->
-            <div class="col-md-10 main-content">
+            <div class="col-md-10 main-content" style="margin-left: 16.6667%; padding: 20px;">
                 <div class="tab-content">
                     <!-- Dashboard Tab -->
                     <div class="dashboard">
                         <h2 class="mb-4">Dashboard</h2>
                         <div class="row">
                             <div class="col-md-3">
-                                <div class="card text-white bg-primary mb-3">
+                                <div class="card text-white bg-primary mb-3" style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
                                             <h5 class="card-title">Tài khoản người dùng</h5>
                                             <i class="fas fa-users me-2"></i>
                                         </div>
-                                        <p class="card-text display-6">${totalAccount}</p>
+                                        <p class="card-text display-6" style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">${totalAccount}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-success mb-3">
+                                <div class="card text-white bg-success mb-3" style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
                                             <h5 class="card-title">Sinh viên</h5>
                                             <i class="fas fa-user-graduate me-2"></i>
                                         </div>
-                                        <p class="card-text display-6">${totalStudent}</p>
+                                        <p class="card-text display-6" style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">${totalStudent}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-info mb-3">
+                                <div class="card text-white bg-info mb-3" style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
                                             <h5 class="card-title">Giáo viên</h5>
                                             <i class="fas fa-chalkboard-teacher me-2"></i>
                                         </div>
-                                        <p class="card-text display-6">${totalTeacher}</p>
+                                        <p class="card-text display-6" style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">${totalTeacher}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-warning mb-3">
+                                <div class="card text-white bg-warning mb-3" style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
                                             <h5 class="card-title">Lớp học</h5>
                                             <i class="fas fa-school me-2"></i>
                                         </div>
-                                        <p class="card-text display-6">${totalClassroom}</p>
+                                        <p class="card-text display-6" style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">${totalClassroom}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div style="width: 600px; margin-top: 30px;">
-                                    <canvas id="barChart"></canvas>
+                                <div  style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px; margin-top: 24px;">
+                                    <div style="width: 600px; padding: 20px;">
+                                        <canvas id="barChart"></canvas>
+                                    </div>
                                 </div>
                             </div>        
                         </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div style="width: 400px; margin-top: 30px;">
-                                    <canvas id="userPieChart"></canvas>
+                        <div style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px; margin-top: 40px;">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div style="width: 400px; padding: 20px 0px;">
+                                        <canvas id="userPieChart"></canvas>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div style="width: 400px; margin-top: 30px;">
-                                    <canvas id="teacherClassroomPieChart"></canvas>
+                                <div class="col-md-4">
+                                    <div style="width: 400px; padding: 20px 0px;">
+                                        <canvas id="teacherClassroomPieChart"></canvas>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div style="width: 400px; margin-top: 30px;">
-                                    <canvas id="studentClassroomPieChart"></canvas>
+                                <div class="col-md-4">
+                                    <div style="width: 400px; padding: 20px 0px;">
+                                        <canvas id="studentClassroomPieChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -308,7 +307,7 @@
                     },
                     title: {
                         display: true,
-                        text: 'Tỷ lệ Lớp học và Giáo viên',
+                        text: 'Tỷ lệ Lớp học và Sinh viên',
                         font: {
                             size: 20
                         }
