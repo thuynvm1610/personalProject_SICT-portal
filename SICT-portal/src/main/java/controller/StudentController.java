@@ -167,6 +167,7 @@ public class StudentController extends HttpServlet {
 			student.setName(req.getParameter("name"));
 			student.setGender(req.getParameter("gender"));
 			student.setDob(Date.valueOf(req.getParameter("dob")));
+			student.setHometown(req.getParameter("hometown"));
 			if (message.length() > 0) {
 				String studentID = (String) req.getSession().getAttribute("studentID");
 				Student originalStudent = studentDAO.findByID(studentID);

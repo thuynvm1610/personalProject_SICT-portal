@@ -133,6 +133,11 @@
                                         <input type="email" class="form-control" id="email" name="email"
                                             value="${student.email}" disabled>
                                     </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="hometown" class="form-label">Quê quán</label>
+                                        <input type="text" class="form-control" id="hometown" name="hometown"
+                                            value="${student.hometown}" style="box-shadow: none;" readonly>
+                                    </div>
                                     <div class="col-12">
                                         <button type="submit" class="btn btn-primary">Cập nhật email</button>
                                     </div>
@@ -166,6 +171,7 @@
                         <input type="hidden" name="name" value="${student.name}">
                         <input type="hidden" name="dob" value="${student.dob}">
                         <input type="hidden" name="gender" value="${student.gender}">
+                        <input type="hidden" name="hometown" value="${student.hometown}">
                         <div class="mb-3">
                             <label for="email" class="form-label">Tên email</label>
                             <input id="email" class="form-control" type="email" name="email" value="${student.email}"

@@ -137,6 +137,11 @@
                                         <input type="email" class="form-control" id="email" name="email"
                                             value="${student.email}" style="box-shadow: none;" readonly>
                                     </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="hometown" class="form-label">Quê quán</label>
+                                        <input type="text" class="form-control" id="hometown" name="hometown"
+                                            value="${student.hometown}" style="box-shadow: none;" readonly>
+                                    </div>
                                     <div class="col-12">
                                         <button type="submit" class="btn btn-primary">Cập nhật email</button>
                                     </div>
