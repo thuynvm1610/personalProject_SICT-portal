@@ -48,6 +48,7 @@
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item active">
+                        <span class="active__subItem"></span>
                         <form method="get" action="student">
                             <input type="hidden" name="action" value="personalInformation">
                             <button type="submit" class="sidebar-btn">

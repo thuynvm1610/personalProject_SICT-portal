@@ -111,64 +111,77 @@
                         <h2 class="mb-4">Dashboard</h2>
                         <div class="row">
                             <div class="col-md-3">
-                                <div class="card text-white bg-primary mb-3" style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
+                                <div class="card text-white bg-primary mb-3"
+                                    style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
                                             <h5 class="card-title">Tài khoản người dùng</h5>
                                             <i class="fas fa-users me-2"></i>
                                         </div>
-                                        <p class="card-text display-6" style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">${totalAccount}</p>
+                                        <p class="card-text display-6"
+                                            style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">
+                                            ${totalAccount}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-success mb-3" style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
+                                <div class="card text-white bg-success mb-3"
+                                    style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
                                             <h5 class="card-title">Sinh viên</h5>
                                             <i class="fas fa-user-graduate me-2"></i>
                                         </div>
-                                        <p class="card-text display-6" style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">${totalStudent}</p>
+                                        <p class="card-text display-6"
+                                            style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">
+                                            ${totalStudent}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-info mb-3" style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
+                                <div class="card text-white bg-info mb-3"
+                                    style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
                                             <h5 class="card-title">Giáo viên</h5>
                                             <i class="fas fa-chalkboard-teacher me-2"></i>
                                         </div>
-                                        <p class="card-text display-6" style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">${totalTeacher}</p>
+                                        <p class="card-text display-6"
+                                            style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">
+                                            ${totalTeacher}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-warning mb-3" style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
+                                <div class="card text-white bg-warning mb-3"
+                                    style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
                                             <h5 class="card-title">Lớp học</h5>
                                             <i class="fas fa-school me-2"></i>
                                         </div>
-                                        <p class="card-text display-6" style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">${totalClassroom}</p>
+                                        <p class="card-text display-6"
+                                            style="font-weight: bold; text-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);">
+                                            ${totalClassroom}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div  style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px; margin-top: 24px;">
+                                <div
+                                    style="background-color: white; box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px; margin-top: 24px;">
                                     <div style="width: 600px; padding: 20px;">
                                         <canvas id="barChart"></canvas>
                                     </div>
                                 </div>
-                            </div>        
+                            </div>
                         </div>
-                        <div style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px; margin-top: 40px;">
+                        <div style="background-color: white; box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px; margin-top: 40px;">
                             <div class="row">
                                 <div class="col-md-4">
                                     <div style="width: 400px; padding: 20px 0px;">
@@ -208,7 +221,8 @@
                         'rgba(54, 162, 235, 1)',
                         'rgba(255, 206, 86, 1)'
                     ],
-                    borderWidth: 1
+                    borderWidth: 1,
+                    hoverOffset: 30
                 }]
             },
             options: {
@@ -231,7 +245,7 @@
                         }
                     }
                 }
-            }
+            },
         });
 
         const ctx2 = document.getElementById('teacherClassroomPieChart').getContext('2d');
@@ -249,7 +263,8 @@
                         'rgba(126, 214, 165, 1)',
                         'rgba(248, 225, 108, 1)'
                     ],
-                    borderWidth: 1
+                    borderWidth: 1,
+                    hoverOffset: 30
                 }]
             },
             options: {
@@ -290,7 +305,8 @@
                         'rgba(233, 78, 119, 1)',
                         'rgba(155, 89, 182, 1)'
                     ],
-                    borderWidth: 1
+                    borderWidth: 1,
+                    hoverOffset: 30
                 }]
             },
             options: {
@@ -338,7 +354,7 @@
                         'rgba(255, 206, 86, 1)',
                         'rgba(126, 214, 165, 1)',
                     ],
-                    borderWidth: 1
+                    borderWidth: 1,
                 }]
             },
             options: {

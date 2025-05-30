@@ -64,6 +64,7 @@
                         </form>
                     </li>
                     <li class="nav-item active">
+                        <span class="active__subItem"></span>
                         <form method="get" action="student">
                             <input type="hidden" name="action" value="accountInformation">
                             <button type="submit" class="sidebar-btn">
