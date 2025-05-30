@@ -143,6 +143,7 @@
                                                     <th>Giới tính</th>
                                                     <th>Ngày sinh</th>
                                                     <th>Email</th>
+                                                    <th>Quê quán</th>
                                                     <th>Hành động</th>
                                                 </tr>
                                             </thead>
@@ -154,6 +155,7 @@
                                                         <td>${s.gender}</td>
                                                         <td>${s.dob}</td>
                                                         <td>${s.email}</td>
+                                                        <td>${s.hometown}</td>
                                                         <td>
                                                             <div style="display: flex; gap: 5px;">
                                                                 <form method="get" action="admin">
@@ -242,6 +244,10 @@
                             <label for="email" class="form-label">Email</label>
                             <input id="email" class="form-control" type="email" name="email" value="${student.email}"
                                 required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hometown" class="form-label">Quê quán</label>
+                            <input id="hometown" class="form-control" type="text" name="hometown" value="${student.hometown}" required>
                         </div>
                         <div style="display: flex; flex-direction: row-reverse;">
                             <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Lưu</button>

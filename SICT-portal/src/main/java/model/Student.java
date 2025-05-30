@@ -9,6 +9,7 @@ public class Student {
 	private String gender;
 	private Date dob;
 	private String email;
+	private String hometown;
 
 	public String getStudentID() {
 		return studentID;
@@ -48,6 +49,14 @@ public class Student {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getHometown() {
+		return hometown;
+	}
+
+	public void setHometown(String hometown) {
+		this.hometown = hometown;
 	}
 
 }

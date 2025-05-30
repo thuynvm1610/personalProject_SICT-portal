@@ -143,6 +143,7 @@
                                                     <th>Giới tính</th>
                                                     <th>Ngày sinh</th>
                                                     <th>Email</th>
+                                                    <th>Quê quán</th>
                                                     <th>Hành động</th>
                                                 </tr>
                                             </thead>
@@ -154,6 +155,7 @@
                                                         <td>${s.gender}</td>
                                                         <td>${s.dob}</td>
                                                         <td>${s.email}</td>
+                                                        <td>${s.hometown}</td>
                                                         <td>
                                                             <div style="display: flex; gap: 5px;">
                                                                 <form method="get" action="admin">

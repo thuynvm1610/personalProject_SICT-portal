@@ -27,6 +27,7 @@ public class StudentDAO {
 				student.setGender(rs.getString("gender"));
 				student.setDob(rs.getDate("dob"));
 				student.setEmail(rs.getString("email"));
+				student.setHometown(rs.getString("hometown"));
 				studentList.add(student);
 			}
 			conn.close();
@@ -55,6 +56,7 @@ public class StudentDAO {
 				student.setGender(rs.getString("gender"));
 				student.setDob(rs.getDate("dob"));
 				student.setEmail(rs.getString("email"));
+				student.setHometown(rs.getString("hometown"));
 			}
 			conn.close();
 			pstmt.close();
@@ -67,7 +69,7 @@ public class StudentDAO {
 	}
 
 	public boolean insert(Student student) {
-		String sql = "insert into student values (?, ?, ?, ?, ?)";
+		String sql = "insert into student values (?, ?, ?, ?, ?, ?)";
 		DBConnect dbConn = new DBConnect();
 		try {
 			Connection conn = dbConn.getConnection();
@@ -77,6 +79,7 @@ public class StudentDAO {
 			pstmt.setString(3, student.getGender());
 			pstmt.setDate(4, student.getDob());
 			pstmt.setString(5, student.getEmail());
+			pstmt.setString(6, student.getHometown());
 			pstmt.executeUpdate();
 			conn.close();
 			pstmt.close();
@@ -88,7 +91,7 @@ public class StudentDAO {
 	}
 
 	public boolean update(Student student) {
-		String sql = "update student set name = ?, gender = ?, dob = ?, email = ? where studentID = ?";
+		String sql = "update student set name = ?, gender = ?, dob = ?, email = ?, hometown = ? where studentID = ?";
 		DBConnect dbConn = new DBConnect();
 		try {
 			Connection conn = dbConn.getConnection();
@@ -97,7 +100,8 @@ public class StudentDAO {
 			pstmt.setString(2, student.getGender());
 			pstmt.setDate(3, student.getDob());
 			pstmt.setString(4, student.getEmail());
-			pstmt.setString(5, student.getStudentID());
+			pstmt.setString(5, student.getHometown());
+			pstmt.setString(6, student.getStudentID());
 			pstmt.executeUpdate();
 			conn.close();
 			pstmt.close();
