@@ -8,7 +8,8 @@ create table teacher (
     name varchar(100) not null,
     gender enum('Nam','Nữ') not null,
     dob date not null,
-    email varchar(100) unique not null
+    email varchar(100) unique not null,
+    hometown varchar(100)
 );
 
 create table classroom (
@@ -46,11 +47,11 @@ create table account (
 );
 
 insert into teacher values
-('GV_001','Nguyễn Thống Nhất','Nam','1975-04-30','nhatnt3004@gmail.com'),
-('GV_002','Nguyễn Văn Hải','Nam','1980-02-27','hainv2702@gmail.com'),
-('GV_003','Trần Huyền Trang','Nữ','1985-12-14','trangth1412@gmail.com'),
-('GV_004','Nguyễn Thị Minh Nguyệt','Nữ','1997-09-24','nguyetntm2409@gmail.com'),
-('GV_005','Phùng Thanh Độ','Nam','1996-01-02','dopt0201@gmail.com');
+('GV_001','Nguyễn Thống Nhất','Nam','1975-04-30','nhatnt3004@gmail.com','Hà Nội'),
+('GV_002','Nguyễn Văn Hải','Nam','1980-02-27','hainv2702@gmail.com','Hải Dương'),
+('GV_003','Trần Huyền Trang','Nữ','1985-12-14','trangth1412@gmail.com','Hồ Chí Minh'),
+('GV_004','Nguyễn Thị Minh Nguyệt','Nữ','1997-09-24','nguyetntm2409@gmail.com','Tuyên Quang'),
+('GV_005','Phùng Thanh Độ','Nam','1996-01-02','dopt0201@gmail.com','Lạng Sơn');
 
 insert into classroom values
 ('QLDACNTT_01','Quản lý dự án công nghệ thông tin','GV_001'),

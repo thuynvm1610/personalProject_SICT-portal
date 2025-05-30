@@ -351,6 +351,7 @@ public class AdminController extends HttpServlet {
 			teacher.setGender(req.getParameter("gender"));
 			teacher.setDob(Date.valueOf(req.getParameter("dob")));
 			teacher.setEmail(req.getParameter("email"));
+			teacher.setHometown(req.getParameter("hometown"));
 
 			if (message.length() > 0) {
 				req.setAttribute("teacher", teacher);
@@ -498,6 +499,7 @@ public class AdminController extends HttpServlet {
 			teacher.setGender(req.getParameter("gender"));
 			teacher.setDob(Date.valueOf(req.getParameter("dob")));
 			teacher.setEmail(req.getParameter("email"));
+			teacher.setHometown(req.getParameter("hometown"));
 
 			if (message.length() > 0) {
 				req.setAttribute("teacher", teacher);

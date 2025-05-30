@@ -28,6 +28,7 @@ public class TeacherDAO {
 				teacher.setGender(rs.getString("gender"));
 				teacher.setDob(rs.getDate("dob"));
 				teacher.setEmail(rs.getString("email"));
+				teacher.setHometown(rs.getString("hometown"));
 				teacherList.add(teacher);
 			}
 			conn.close();
@@ -56,6 +57,7 @@ public class TeacherDAO {
 				teacher.setGender(rs.getString("gender"));
 				teacher.setDob(rs.getDate("dob"));
 				teacher.setEmail(rs.getString("email"));
+				teacher.setHometown(rs.getString("hometown"));
 			}
 			conn.close();
 			pstmt.close();
@@ -68,7 +70,7 @@ public class TeacherDAO {
 	}
 
 	public boolean insert(Teacher teacher) {
-		String sql = "insert into teacher values (?, ?, ?, ?, ?)";
+		String sql = "insert into teacher values (?, ?, ?, ?, ?, ?)";
 		DBConnect dbConn = new DBConnect();
 		try {
 			Connection conn = dbConn.getConnection();
@@ -78,6 +80,7 @@ public class TeacherDAO {
 			pstmt.setString(3, teacher.getGender());
 			pstmt.setDate(4, teacher.getDob());
 			pstmt.setString(5, teacher.getEmail());
+			pstmt.setString(6, teacher.getHometown());
 			pstmt.executeUpdate();
 			conn.close();
 			pstmt.close();
@@ -89,7 +92,7 @@ public class TeacherDAO {
 	}
 
 	public boolean update(Teacher teacher) {
-		String sql = "update teacher set name = ?, gender = ?, dob = ?, email = ? where teacherID = ?";
+		String sql = "update teacher set name = ?, gender = ?, dob = ?, email = ?, hometown = ? where teacherID = ?";
 		DBConnect dbConn = new DBConnect();
 		try {
 			Connection conn = dbConn.getConnection();
@@ -98,7 +101,8 @@ public class TeacherDAO {
 			pstmt.setString(2, teacher.getGender());
 			pstmt.setDate(3, teacher.getDob());
 			pstmt.setString(4, teacher.getEmail());
-			pstmt.setString(5, teacher.getTeacherID());
+			pstmt.setString(5, teacher.getHometown());
+			pstmt.setString(6, teacher.getTeacherID());
 			pstmt.executeUpdate();
 			conn.close();
 			pstmt.close();
