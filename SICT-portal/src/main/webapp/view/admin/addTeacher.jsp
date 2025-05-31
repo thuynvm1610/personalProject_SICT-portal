@@ -19,7 +19,7 @@
             <!-- Sidebar -->
             <div class="col-md-2 sidebar p-0">
                 <div class="text-left p-3 bg-dark">
-                    <h4 class="text-white">Hệ thống quản lý</h4>
+                    <div class="logo">SICT<span class="sub"> Portal</span></div>
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item">
@@ -125,7 +125,7 @@
                                         <input type="hidden" name="action" value="searchTeacher" />
                                         <input
                                             style="outline: none; border: none; border-bottom-left-radius: 6px; border-top-left-radius: 6px; padding-left: 10px;"
-                                            type="text" name="teacherID" placeholder="Nhập mã giáo viên..." />
+                                            type="text" name="teacherID" placeholder="Nhập mã giáo viên..." required/>
                                         <button class="btn btn-outline-secondary" type="submit">
                                             <i class="fas fa-search"></i>
                                         </button>

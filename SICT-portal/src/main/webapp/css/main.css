@@ -1,3 +1,21 @@
+.logo {
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: bold;
+  font-size: 36px;
+  color: #004aad;
+  letter-spacing: 2px;
+  background: linear-gradient(45deg, #004aad, #00bfff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo .sub {
+  font-size: 18px;
+  font-weight: normal;
+  color: #666;
+  margin-left: 8px;
+}
+
 .sidebar {
 	min-height: 100vh;
 	background-color: #343a40;

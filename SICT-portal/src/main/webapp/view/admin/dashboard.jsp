@@ -20,7 +20,7 @@
             <!-- Sidebar -->
             <div class="col-md-2 sidebar p-0" style="position: fixed;">
                 <div class="text-left p-3 bg-dark">
-                    <h4 class="text-white">Hệ thống quản lý</h4>
+                    <div class="logo">SICT<span class="sub"> Portal</span></div>
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item active">
