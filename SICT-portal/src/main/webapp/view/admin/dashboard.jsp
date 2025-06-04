@@ -111,8 +111,9 @@
                         <h2 class="mb-4">Dashboard</h2>
                         <div class="row">
                             <div class="col-md-3">
-                                <div class="card text-white bg-primary mb-3"
-                                    style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
+                                <div class="card text-white mb-3"
+                                    style="background: linear-gradient(135deg, #007BFF, #00C2FF);
+                                        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
@@ -126,8 +127,9 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-success mb-3"
-                                    style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
+                                <div class="card text-white mb-3"
+                                    style="background: linear-gradient(135deg, #00b09b, #96c93d);
+                                        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
@@ -141,8 +143,9 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-info mb-3"
-                                    style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
+                                <div class="card text-white mb-3"
+                                    style="background: linear-gradient(135deg, #00C9FF, #92FE9D);
+                                        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
@@ -156,8 +159,9 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-warning mb-3"
-                                    style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
+                                <div class="card text-white mb-3"
+                                    style="background: linear-gradient(135deg, #f7971e, #ffd200);
+                                        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                     <div class="card-body">
                                         <div
                                             style="display: flex; align-items: center; justify-content: space-between;">
@@ -181,7 +185,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="background-color: white; box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px; margin-top: 40px;">
+                        <div
+                            style="background-color: white; box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px; margin-top: 40px;">
                             <div class="row">
                                 <div class="col-md-4">
                                     <div style="width: 400px; padding: 20px 0px;">

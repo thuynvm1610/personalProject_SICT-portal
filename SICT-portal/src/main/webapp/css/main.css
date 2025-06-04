@@ -31,7 +31,7 @@
 }
 
 .active {
-	background-color: #7d7f7c; 
+	background-color: #004aad; 
     color: #fff;
 	position: relative;
 }
@@ -42,7 +42,7 @@
 	position: absolute;
 	bottom: -1px;
 	right: -11px;
-	border-top: 10px solid #595b59;
+	border-top: 10px solid #023b82;
   	border-right: 10px solid transparent;
 }
 
@@ -61,12 +61,12 @@
 	right: -11px;
 	width: 11px;
 	height: calc(100% - 9px);
-	background-color: #7d7f7c;
+	background-color: #004aad;
 }
 
 .main-content {
+	background-color: white;
 	padding: 20px;
-	background: linear-gradient(-64.7deg, #343a40 50%, white 50%);
 }
 
 .card-header {

@@ -139,8 +139,7 @@
                             <div class="col-md-6">
                                 <form method="get" action="admin">
                                     <input type="hidden" name="action" value="searchClassroomListByStudentID" />
-                                    <label for="studentID" class="form-label">Xem danh sách lớp theo<span style="color: white;"> mã sinh
-                                        viên</span></label>
+                                    <label for="studentID" class="form-label">Xem danh sách lớp theo mã sinh viên</label>
                                     <div class="input-group" style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5); border-radius: 6px;">
                                         <input type="text" class="form-control" id="studentID" name="studentID"
                                             style="box-shadow: none;" placeholder="Nhập mã sinh viên...">
@@ -174,7 +173,7 @@
                             <div class="col-md-6" style="margin-top: 24px;">
                                 <form method="post" action="admin">
                                     <input type="hidden" name="action" value="deleteStudent_classroom" />
-                                    <label style="font-size: 18.72px; font-weight: bold; color: white;" for="studentID"
+                                    <label style="font-size: 18.72px; font-weight: bold" for="studentID"
                                         class="form-label text-center w-100">
                                         Xóa sinh viên khỏi lớp
                                     </label>
