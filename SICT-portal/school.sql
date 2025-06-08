@@ -74,9 +74,9 @@ insert into student values
 ('SV_0006','Tăng Mạnh Đạt','Nam','2004-01-17','dattm1701@gmail.com','Thanh Hóa'),
 ('SV_0007','Phạm Trí Định','Nam','2004-11-17','dinhpt1711@gmail.com','Bắc Giang'),
 ('SV_0008','Hoàng Thu Hằng','Nữ','2004-06-05','hanght0506@gmail.com','Ninh Bình'),
-('SV_0009','Nguyễn Thùy Trang','Nữ','2004-09-09','trangnt0909@gmail.com','Hải Dương'),
+('SV_0009','Nguyễn Thùy Trang','Nữ','2004-09-16','trangnt1609@gmail.com','Hải Dương'),
 ('SV_0010','Nguyễn Thị Hồng Ngọc','Nữ','2004-12-11','ngocnth1112@gmail.com','Bắc Ninh'),
-('SV_0011','Nguyễn Thanh Bảo','Nam','2005-10-18','baont1810@gmail.com','Hà Nội'),
+('SV_0011','Nguyễn Thanh Bảo','Nam','2005-10-18','baont1810@gmail.com','Lai Châu'),
 ('SV_0012','Nguyễn Văn Quang','Nam','2005-02-09','quangnv0902@gmail.com','Hải Phòng'),
 ('SV_0013','Dương Danh Hiếu','Nam','2005-09-27','hieudd2709@gmail.com','Hà Nam'),
 ('SV_0014','Trần Văn Thắng','Nam','2005-03-12','thangtv1203@gmail.com','Thái Bình'),
@@ -87,14 +87,14 @@ insert into student values
 ('SV_0019','Nguyễn Thành Công','Nam','2005-04-20','congnt2004@gmail.com','Hưng Yên'),
 ('SV_0020','Phạm Thị Phương','Nữ','2005-07-15','phuongpt1507@gmail.com','Nam Định'),
 ('SV_0021','Lê Thị Thảo','Nữ','2006-10-09','thaolt0910@gmail.com','Vĩnh Phúc'),
-('SV_0022','Nguyễn Đặng Hải Quân','Nam','2006-11-11','quanndh1111@gmail.com','Nghệ An'),
+('SV_0022','Nguyễn Đặng Hải Quân','Nam','2006-11-11','quanndh1111@gmail.com','Yên Bái'),
 ('SV_0023','Nguyễn Thị My','Nữ','2006-12-19','mynguyen1912@gmail.com','Phú Thọ'),
 ('SV_0024','Đỗ Đức Nhật','Nam','2006-02-16','nhatdd1602@gmail.com','Hòa Bình'),
 ('SV_0025','Nguyễn Hữu Hưởng','Nam','2006-09-05','huongnh0509@gmail.com','Quảng Ninh'),
 ('SV_0026','Lê Tuấn Minh','Nam','2006-08-10','minhlt1008@gmail.com','Bắc Giang'),
 ('SV_0027','Nghiêm Đình Việt','Nam','2006-05-16','vietnd1605@gmail.com','Hà Nội'),
-('SV_0028','Nguyễn Viết Nam','Nam','2006-04-23','namnv2304@gmail.com','Hà Nội'),
-('SV_0029','Nguyễn Thanh Tùng','Nam','2006-11-16','tungnt1611@gmail.com','Ninh Bình'),
+('SV_0028','Nguyễn Viết Nam','Nam','2006-04-23','namnv2304@gmail.com','Hà Giang'),
+('SV_0029','Nguyễn Thanh Tùng','Nam','2006-11-16','tungnt1611@gmail.com','Lạng Sơn'),
 ('SV_0030','Hồ Quốc Anh Tùng','Nam','2006-12-12','tunghaq1212@gmail.com','Thanh Hóa');
 
 insert into student_classroom values 
@@ -107,7 +107,8 @@ insert into student_classroom values
 ('HQTCSDL_01', 'SV_0003'),
 ('QLDACNTT_01', 'SV_0003'),
 ('TKW_01', 'SV_0003'),
-('LTJW_01', 'SV_0003');
+('LTJW_01', 'SV_0003'),
+('QLDACNTT_01', 'SV_0009');
 
 insert into account values 
 ('TK_0001','ThuyNguyen1610','thuynguyen1610','student','SV_0001'),

@@ -11,31 +11,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
-    <style>
-        .filter-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 75%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 999;
-        }
-
-        .filter-modal {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 25%;
-            height: 100%;
-            background-color: #fff;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
-            display: none;
-            z-index: 1000;
-            padding: 20px;
-        }
-    </style>
 </head>
 
 <body>
@@ -276,13 +251,19 @@
                         </c:forEach>
                     </select>
                 </div>
-                <!-- <div class="mb-3">
+                <div class="mb-3">
                     <label for="hometown" class="form-label">Quê quán</label>
-                    <input id="hometown" class="form-control" type="text" name="hometown">
-                </div> -->
+                    <select class="form-select" id="hometown" name="hometown">
+                        <option value="">Chọn quê quán</option>
+                        <c:forEach var="hometown" items="${hometownList}">
+                            <option value="${hometown}">${hometown}</option>
+                        </c:forEach>
+                    </select>
+                </div>
                 <div style="display: flex; flex-direction: row-reverse;">
                     <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Lưu</button>
-                    <button id="cancel-filter__btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button id="cancel-filter__btn" type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Hủy</button>
                 </div>
             </form>
         </div>

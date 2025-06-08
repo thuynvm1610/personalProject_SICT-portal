@@ -100,6 +100,30 @@
 	display: flex;
 }
 
+.filter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 75%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 999;
+}
+
+.filter-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 25%;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+    display: none;
+    z-index: 1000;
+    padding: 20px;
+}
+
 .alert-error {
 	background-color: #ffe0e0;
 	color: #d8000c;

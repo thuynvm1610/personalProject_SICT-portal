@@ -120,12 +120,20 @@
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <span>Danh sách sinh viên</span>
+                                <div class="filter-controls" style="margin: 0px 30px 0px auto;">
+                                    <span style="margin-right: 5px; font-weight: normal;" class="filter-controls__text">
+                                        Bộ lọc
+                                    </span>
+                                    <button class="btn btn-outline-secondary" id="filterBtn">
+                                        <i class="fa-solid fa-filter"></i>
+                                    </button>
+                                </div>
                                 <form method="get" action="admin">
                                     <div style="display: flex;">
                                         <input type="hidden" name="action" value="searchStudent" />
                                         <input
                                             style="outline: none; border: none; border-bottom-left-radius: 6px; border-top-left-radius: 6px; padding-left: 10px;"
-                                            type="text" name="studentID" placeholder="Nhập mã sinh viên..." required/>
+                                            type="text" name="studentID" placeholder="Nhập mã sinh viên..." required />
                                         <button class="btn btn-outline-secondary" type="submit">
                                             <i class="fas fa-search"></i>
                                         </button>
@@ -212,11 +220,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                        <c:if test="${not empty message}">
-                            <div class="alert-error">
-                                &#9888; ${message}
-                            </div>
-                        </c:if>
+                    <c:if test="${not empty message}">
+                        <div class="alert-error">
+                            &#9888; ${message}
+                        </div>
+                    </c:if>
                     <p>Bạn có chắc chắn muốn xóa sinh viên <strong>
                             <c:out value="${studentID}" />
                         </strong> không?</p>
@@ -237,6 +245,66 @@
         window.addEventListener('DOMContentLoaded', (event) => {
             var myModal = new bootstrap.Modal(document.getElementById('deleteStudentModal'));
             myModal.show();
+        });
+    </script>
+
+    <div style="cursor: pointer;" id="overlay" class="filter-overlay"></div>
+    <div id="filterModal" class="filter-modal">
+        <h3>Bộ lọc sinh viên</h3>
+        <form action="admin" method="get">
+            <input type="hidden" name="action" value="studentFilter" />
+            <div class="mb-3">
+                <label for="gender" class="form-label">Giới tính</label>
+                <select class="form-select" id="gender" name="gender">
+                    <option value="">Chọn giới tính</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="yob" class="form-label">Năm sinh</label>
+                <select class="form-select" id="yob" name="yob">
+                    <option value="">Chọn năm sinh</option>
+                    <c:forEach var="yob" items="${yobList}">
+                        <option value="${yob}">${yob}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="hometown" class="form-label">Quê quán</label>
+                <select class="form-select" id="hometown" name="hometown">
+                    <option value="">Chọn quê quán</option>
+                    <c:forEach var="hometown" items="${hometownList}">
+                        <option value="${hometown}">${hometown}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div style="display: flex; flex-direction: row-reverse;">
+                <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Lưu</button>
+                <button id="cancel-filter__btn" type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        const filterBtn = document.getElementById('filterBtn');
+        const filterModal = document.getElementById('filterModal');
+        const overlay = document.getElementById('overlay');
+        const cancelFilter__btn = document.getElementById('cancel-filter__btn');
+
+        filterBtn.addEventListener('click', () => {
+            filterModal.style.display = 'block';
+            overlay.style.display = 'block';
+        });
+
+        overlay.addEventListener('click', () => {
+            filterModal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        cancelFilter__btn.addEventListener('click', () => {
+            filterModal.style.display = 'none';
+            overlay.style.display = 'none';
         });
     </script>
 </body>

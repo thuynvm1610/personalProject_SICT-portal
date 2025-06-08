@@ -129,6 +129,14 @@
                     <div>
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h2>Quản lý thông tin giáo viên</h2>
+                            <div class="filter-controls" style="margin: 0px 30px 0px auto;">
+                                <span style="margin-right: 5px; font-weight: normal;" class="filter-controls__text">
+                                    Bộ lọc
+                                </span>
+                                <button class="btn btn-outline-secondary" id="filterBtn">
+                                    <i class="fa-solid fa-filter"></i>
+                                </button>
+                            </div>
                             <form method="get" action="admin">
                                 <input type="hidden" name="action" value="addTeacherForm" />
                                 <button class="btn btn-primary" type="submit">

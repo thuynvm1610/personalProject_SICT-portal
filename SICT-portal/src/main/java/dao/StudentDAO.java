@@ -217,7 +217,7 @@ public class StudentDAO {
 		return studentName;
 	}
 
-	public List<Student> studentListByFilter(String gender, String yob) {
+	public List<Student> studentListByFilter(String gender, String yob, String hometown) {
 		StringBuilder sql = new StringBuilder("select * from student where 1=1");
 		List<Object> params = new ArrayList<>();
 		if (!gender.isEmpty()) {
@@ -227,6 +227,10 @@ public class StudentDAO {
 		if (!yob.isEmpty()) {
 			sql.append(" and year(dob) = ?");
 			params.add(yob);
+		}
+		if (!hometown.isEmpty()) {
+			sql.append(" and hometown = ?");
+			params.add(hometown);
 		}
 		DBConnect dbConn = new DBConnect();
 		List<Student> studentList = new ArrayList<>();
@@ -277,6 +281,28 @@ public class StudentDAO {
 			return null;
 		}
 		return yobList;
+	}
+
+	public List<String> getListOfHometown() {
+		String sql = "select hometown from student group by hometown";
+		DBConnect dbConn = new DBConnect();
+		List<String> hometownList = new ArrayList<>();
+		try {
+			Connection conn = dbConn.getConnection();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				String hometown = rs.getString(1);
+				hometownList.add(hometown);
+			}
+			conn.close();
+			stmt.close();
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return hometownList;
 	}
 
 }
