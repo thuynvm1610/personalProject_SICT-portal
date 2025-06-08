@@ -96,8 +96,21 @@ public class AdminController extends HttpServlet {
 			    req.setAttribute("succeedDeleteMessage", succeedDeleteMessage);
 			    req.getSession().removeAttribute("succeedDeleteMessage");
 			}
+			List<Integer> yobList = studentDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
 			req.getRequestDispatcher("view/admin/studentList.jsp").forward(req, resp);
 			return;
+		} else if (action.equals("studentFilter")) {
+			String gender = req.getParameter("gender");
+			String yob = req.getParameter("yob");
+			StudentDAO studentDAO = new StudentDAO();
+			List<Student> studentList = new ArrayList<Student>();
+			
+			studentList = studentDAO.studentListByFilter(gender, yob);
+			List<Integer> yobList = studentDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			req.getSession().setAttribute("studentList", studentList);
+			req.getRequestDispatcher("view/admin/studentList.jsp").forward(req, resp);
 		} else if (action.equals("student_classroom")) {
 			req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
 			return;

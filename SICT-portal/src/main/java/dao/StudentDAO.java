@@ -217,4 +217,66 @@ public class StudentDAO {
 		return studentName;
 	}
 
+	public List<Student> studentListByFilter(String gender, String yob) {
+		StringBuilder sql = new StringBuilder("select * from student where 1=1");
+		List<Object> params = new ArrayList<>();
+		if (!gender.isEmpty()) {
+			sql.append(" and gender = ?");
+			params.add(gender);
+		}
+		if (!yob.isEmpty()) {
+			sql.append(" and year(dob) = ?");
+			params.add(yob);
+		}
+		DBConnect dbConn = new DBConnect();
+		List<Student> studentList = new ArrayList<>();
+		try {
+			Connection conn = dbConn.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			for (int i = 0; i < params.size(); i++) {
+	            pstmt.setObject(i + 1, params.get(i));
+	        }
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Student student = new Student();
+				student.setStudentID(rs.getString("studentID"));
+				student.setName(rs.getString("name"));
+				student.setGender(rs.getString("gender"));
+				student.setDob(rs.getDate("dob"));
+				student.setEmail(rs.getString("email"));
+				student.setHometown(rs.getString("hometown"));
+				studentList.add(student);
+			}
+			conn.close();
+			pstmt.close();
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return studentList;
+	}
+	
+	public List<Integer> getListOfYear() {
+		String sql = "select year(dob) from student group by year(dob)";
+		DBConnect dbConn = new DBConnect();
+		List<Integer> yobList = new ArrayList<>();
+		try {
+			Connection conn = dbConn.getConnection();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				Integer yob = rs.getInt(1);
+				yobList.add(yob);
+			}
+			conn.close();
+			stmt.close();
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return yobList;
+	}
+
 }
