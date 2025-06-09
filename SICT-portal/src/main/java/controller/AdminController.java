@@ -54,8 +54,26 @@ public class AdminController extends HttpServlet {
 			    req.setAttribute("succeedDeleteMessage", succeedDeleteMessage);
 			    req.getSession().removeAttribute("succeedDeleteMessage");
 			}
+			List<Integer> yobList = teacherDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = teacherDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
 			req.getRequestDispatcher("view/admin/teacherList.jsp").forward(req, resp);
 			return;
+		} else if (action.equals("teacherFilter")) {
+			String gender = req.getParameter("gender");
+			String yob = req.getParameter("yob");
+			String hometown = req.getParameter("hometown");
+			TeacherDAO teacherDAO = new TeacherDAO();
+			List<Teacher> teacherList = new ArrayList<>();
+			
+			teacherList = teacherDAO.teacherListByFilter(gender, yob, hometown);
+			List<Integer> yobList = teacherDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = teacherDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getSession().setAttribute("teacherList", teacherList);
+			req.getRequestDispatcher("view/admin/teacherList.jsp").forward(req, resp);
 		} else if (action.equals("classroomList")) {
 			ClassroomDAO classroomDAO = new ClassroomDAO();
 			List<Classroom> classroomList = classroomDAO.findAll();
@@ -262,6 +280,11 @@ public class AdminController extends HttpServlet {
 			req.getRequestDispatcher("view/admin/accountList.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("addTeacherForm")) {
+			TeacherDAO teacherDAO = new TeacherDAO();
+			List<Integer> yobList = teacherDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = teacherDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
 			req.getRequestDispatcher("view/admin/addTeacher.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("addClassroomForm")) {
@@ -283,6 +306,10 @@ public class AdminController extends HttpServlet {
 			TeacherDAO teacherDAO = new TeacherDAO();
 			Teacher teacher = teacherDAO.findById(teacherID);
 			req.setAttribute("teacher", teacher);
+			List<Integer> yobList = teacherDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = teacherDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
 			req.getRequestDispatcher("view/admin/updateTeacher.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("updateClassroomForm")) {
@@ -313,6 +340,11 @@ public class AdminController extends HttpServlet {
 		} else if (action.equals("deleteTeacherForm")) {
 			String teacherID = req.getParameter("teacherID");
 			req.setAttribute("teacherID", teacherID);
+			TeacherDAO teacherDAO = new TeacherDAO();
+			List<Integer> yobList = teacherDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = teacherDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
 			req.getRequestDispatcher("view/admin/deleteTeacher.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("deleteClassroomForm")) {

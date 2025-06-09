@@ -228,45 +228,44 @@
                 </div>
             </div>
         </div>
-
-        <div style="cursor: pointer;" id="overlay" class="filter-overlay"></div>
-        <div id="filterModal" class="filter-modal">
-            <h3>Bộ lọc sinh viên</h3>
-            <form action="admin" method="get">
-                <input type="hidden" name="action" value="studentFilter" />
-                <div class="mb-3">
-                    <label for="gender" class="form-label">Giới tính</label>
-                    <select class="form-select" id="gender" name="gender">
-                        <option value="">Chọn giới tính</option>
-                        <option value="Nam">Nam</option>
-                        <option value="Nữ">Nữ</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="yob" class="form-label">Năm sinh</label>
-                    <select class="form-select" id="yob" name="yob">
-                        <option value="">Chọn năm sinh</option>
-                        <c:forEach var="yob" items="${yobList}">
-                            <option value="${yob}">${yob}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="hometown" class="form-label">Quê quán</label>
-                    <select class="form-select" id="hometown" name="hometown">
-                        <option value="">Chọn quê quán</option>
-                        <c:forEach var="hometown" items="${hometownList}">
-                            <option value="${hometown}">${hometown}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div style="display: flex; flex-direction: row-reverse;">
-                    <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Lưu</button>
-                    <button id="cancel-filter__btn" type="button" class="btn btn-secondary"
-                        data-bs-dismiss="modal">Hủy</button>
-                </div>
-            </form>
-        </div>
+    </div>
+    <div style="cursor: pointer;" id="overlay" class="filter-overlay"></div>
+    <div id="filterModal" class="filter-modal">
+        <h3>Bộ lọc sinh viên</h3>
+        <form action="admin" method="get">
+            <input type="hidden" name="action" value="studentFilter" />
+            <div class="mb-3">
+                <label for="gender" class="form-label">Giới tính</label>
+                <select class="form-select" id="gender" name="gender">
+                    <option value="">Chọn giới tính</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="yob" class="form-label">Năm sinh</label>
+                <select class="form-select" id="yob" name="yob">
+                    <option value="">Chọn năm sinh</option>
+                    <c:forEach var="yob" items="${yobList}">
+                        <option value="${yob}">${yob}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="hometown" class="form-label">Quê quán</label>
+                <select class="form-select" id="hometown" name="hometown">
+                    <option value="">Chọn quê quán</option>
+                    <c:forEach var="hometown" items="${hometownList}">
+                        <option value="${hometown}">${hometown}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div style="display: flex; flex-direction: row-reverse;">
+                <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Lưu</button>
+                <button id="cancel-filter__btn" type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </form>
     </div>
     <script>
         const filterBtn = document.getElementById('filterBtn');
