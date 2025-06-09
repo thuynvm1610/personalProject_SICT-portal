@@ -158,6 +158,14 @@ public class AdminController extends HttpServlet {
 			}
 			req.getRequestDispatcher("view/admin/accountList.jsp").forward(req, resp);
 			return;
+		} else if (action.equals("accountFilter")) {
+			String role = req.getParameter("role");
+			AccountDAO accountDAO = new AccountDAO();
+			List<Account> accountList = new ArrayList<>();
+			
+			accountList = accountDAO.accountListByRole(role);
+			req.getSession().setAttribute("accountList", accountList);
+			req.getRequestDispatcher("view/admin/accountList.jsp").forward(req, resp);
 		} else if (action.equals("searchTeacher")) {
 			String teacherID = req.getParameter("teacherID");
 			TeacherDAO teacherDAO = new TeacherDAO();

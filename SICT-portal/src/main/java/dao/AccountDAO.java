@@ -209,5 +209,40 @@ public class AccountDAO {
 		}
 		return accountID;
 	}
+
+	public List<Account> accountListByRole(String role) {
+		StringBuilder sql = new StringBuilder("select * from account where 1=1");
+		List<Object> params = new ArrayList<>();
+		if (!role.isEmpty()) {
+			sql.append(" and role = ?");
+			params.add(role);
+		}
+		DBConnect dbConn = new DBConnect();
+		List<Account> accountList = new ArrayList<>();
+		try {
+			Connection conn = dbConn.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+			for (int i = 0; i < params.size(); i++) {
+	            pstmt.setObject(i + 1, params.get(i));
+	        }
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Account account = new Account();
+				account.setAccountID(rs.getString("accountID"));
+				account.setUsername(rs.getString("username"));
+				account.setPassword(rs.getString("password"));
+				account.setRole(rs.getString("role"));
+				account.setStudentID(rs.getString("studentID"));
+				accountList.add(account);
+			}
+			conn.close();
+			pstmt.close();
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return accountList;
+	}
 	
 }

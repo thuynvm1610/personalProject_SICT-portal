@@ -140,6 +140,14 @@
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <span>Danh sách tài khoản</span>
+                                <div class="filter-controls" style="margin: 0px 30px 0px auto;">
+                                    <span style="margin-right: 5px; font-weight: normal;" class="filter-controls__text">
+                                        Bộ lọc
+                                    </span>
+                                    <button class="btn btn-outline-secondary" id="filterBtn">
+                                        <i class="fa-solid fa-filter"></i>
+                                    </button>
+                                </div>
                                 <form method="get" action="admin">
                                     <div style="display: flex;">
                                         <input type="hidden" name="action" value="searchAccount" />
@@ -210,6 +218,47 @@
             </div>
         </div>
     </div>
+    <div style="cursor: pointer;" id="overlay" class="filter-overlay"></div>
+    <div id="filterModal" class="filter-modal">
+        <h3>Bộ lọc tài khoản</h3>
+        <form action="admin" method="get">
+            <input type="hidden" name="action" value="accountFilter" />
+            <div class="mb-3">
+                <label for="role" class="form-label">Quyền đăng nhập</label>
+                <select class="form-select" id="role" name="role">
+                    <option value="">Chọn quyền đăng nhập</option>
+                    <option value="student">Student</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div style="display: flex; flex-direction: row-reverse;">
+                <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Lưu</button>
+                <button id="cancel-filter__btn" type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        const filterBtn = document.getElementById('filterBtn');
+        const filterModal = document.getElementById('filterModal');
+        const overlay = document.getElementById('overlay');
+        const cancelFilter__btn = document.getElementById('cancel-filter__btn');
+
+        filterBtn.addEventListener('click', () => {
+            filterModal.style.display = 'block';
+            overlay.style.display = 'block';
+        });
+
+        overlay.addEventListener('click', () => {
+            filterModal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        cancelFilter__btn.addEventListener('click', () => {
+            filterModal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+    </script>
 </body>
 
 </html>
