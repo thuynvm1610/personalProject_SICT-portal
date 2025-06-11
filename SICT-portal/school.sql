@@ -119,7 +119,7 @@ insert into account values
 ('TK_0006','DatTang1701','dattang1701','student','SV_0006'),
 ('TK_0007','DinhPham1711','dinhpham1711','student','SV_0007'),
 ('TK_0008','HangHoang0506','hanghoang0506','student','SV_0008'),
-('TK_0009','TrangNguyen0909','trangnguyen0909','student','SV_0009'),
+('TK_0009','TrangNguyen1609','trangnguyen1609','student','SV_0009'),
 ('TK_0010','NgocNguyen1112','ngocnguyen1112','student','SV_0010'),
 ('TK_0011','BaoNguyen1810','baonguyen1810','student','SV_0011'),
 ('TK_0012','QuangNguyen0902','quangnguyen0902','student','SV_0012'),
