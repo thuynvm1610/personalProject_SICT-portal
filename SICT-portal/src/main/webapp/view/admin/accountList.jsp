@@ -34,6 +34,11 @@
             &#9989; ${succeedDeleteMessage}
         </div>
     </c:if>
+    <c:if test="${not empty infoMessage}">
+        <div class="alert-info">
+            &#8505; ${infoMessage}
+        </div>
+    </c:if>
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
@@ -140,7 +145,15 @@
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <span>Danh sách tài khoản</span>
-                                <div class="filter-controls" style="margin: 0px 30px 0px auto;">
+                                <div style="margin: 0px 30px 0px auto;">
+                                    <span style="margin-right: 5px; font-weight: normal;">
+                                        Xóa tài khoản đã chọn
+                                    </span>
+                                    <button type="button" id="deleteTriggerBtn" class="btn btn-outline-secondary">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                                <div class="filter-controls" style="margin-right: 30px;">
                                     <span style="margin-right: 5px; font-weight: normal;" class="filter-controls__text">
                                         Bộ lọc
                                     </span>
@@ -153,7 +166,7 @@
                                         <input type="hidden" name="action" value="searchAccount" />
                                         <input
                                             style="outline: none; border: none; border-bottom-left-radius: 6px; border-top-left-radius: 6px; padding-left: 10px;"
-                                            type="text" name="accountID" placeholder="Nhập mã tài khoản..." required/>
+                                            type="text" name="accountID" placeholder="Nhập mã tài khoản..." required />
                                         <button class="btn btn-outline-secondary" type="submit">
                                             <i class="fas fa-search"></i>
                                         </button>
@@ -163,52 +176,49 @@
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <div style="max-height: 520.5px; overflow: auto;">
-                                        <table class="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Mã tài khoản</th>
-                                                    <th>Tên tài khoản</th>
-                                                    <th>Mật khẩu</th>
-                                                    <th>Quyền đăng nhập</th>
-                                                    <th>Mã SV</th>
-                                                    <th>Hành động</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <c:forEach var="a" items="${accountList}">
+                                        <form method="post" action="admin">
+                                            <input type="hidden" name="action" value="deleteAccounts">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
                                                     <tr>
-                                                        <td>${a.accountID}</td>
-                                                        <td>${a.username}</td>
-                                                        <td>${a.password}</td>
-                                                        <td>${a.role}</td>
-                                                        <td>${a.studentID}</td>
-                                                        <td>
-                                                            <div style="display: flex; gap: 5px;">
-                                                                <form method="get" action="admin">
-                                                                    <input type="hidden" name="action"
-                                                                        value="updateAccountForm" />
-                                                                    <input type="hidden" name="accountID"
-                                                                        value="${a.accountID}" />
-                                                                    <button class="btn btn-sm btn-warning"
-                                                                        type="submit">
-                                                                        <i class="fas fa-edit"></i>
-                                                                    </button>
-                                                                </form>
-                                                                <form method="get" action="admin">
-                                                                    <input type="hidden" name="action"
-                                                                        value="deleteAccountForm" />
-                                                                    <input type="hidden" name="accountID"
-                                                                        value="${a.accountID}" />
-                                                                    <button class="btn btn-sm btn-danger" type="submit">
-                                                                        <i class="fas fa-trash"></i>
-                                                                    </button>
-                                                                </form>
-                                                            </div>
-                                                        </td>
+                                                        <th><input type="checkbox" id="checkAll" onclick="toggle(this)">
+                                                        </th>
+                                                        <th>Mã tài khoản</th>
+                                                        <th>Tên tài khoản</th>
+                                                        <th>Mật khẩu</th>
+                                                        <th>Quyền đăng nhập</th>
+                                                        <th>Mã SV</th>
+                                                        <th>Hành động</th>
                                                     </tr>
-                                                </c:forEach>
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    <c:forEach var="a" items="${accountList}">
+                                                        <tr>
+                                                            <td><input type="checkbox" name="accountIds"
+                                                                    value="${a.accountID}"></td>
+                                                            <td>${a.accountID}</td>
+                                                            <td>${a.username}</td>
+                                                            <td>${a.password}</td>
+                                                            <td>${a.role}</td>
+                                                            <td>${a.studentID}</td>
+                                                            <td>
+                                                                <div style="display: flex; gap: 5px;">
+                                                                    <a class="btn btn-sm btn-warning"
+                                                                        href="admin?action=updateAccountForm&accountID=${a.accountID}">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-sm btn-danger"
+                                                                        href="admin?action=deleteAccountForm&accountID=${a.accountID}">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </table>
+                                            <button id="submitDeleteBtn" style="display: none;" type="submit"></button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -259,6 +269,20 @@
             overlay.style.display = 'none';
         });
     </script>
+    <script>
+        function toggle(source) {
+            checkboxes = document.getElementsByName('accountIds');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
+    <script>
+        document.getElementById("deleteTriggerBtn").addEventListener("click", function () {
+            document.getElementById("submitDeleteBtn").click();
+        });
+    </script>
+
 </body>
 
 </html>

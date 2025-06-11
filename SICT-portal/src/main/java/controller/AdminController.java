@@ -156,6 +156,11 @@ public class AdminController extends HttpServlet {
 			    req.setAttribute("succeedDeleteMessage", succeedDeleteMessage);
 			    req.getSession().removeAttribute("succeedDeleteMessage");
 			}
+			String infoMessage = (String) req.getSession().getAttribute("infoMessage");
+			if (infoMessage != null) {
+			    req.setAttribute("infoMessage", infoMessage);
+			    req.getSession().removeAttribute("infoMessage");
+			}
 			req.getRequestDispatcher("view/admin/accountList.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("accountFilter")) {
@@ -712,6 +717,20 @@ public class AdminController extends HttpServlet {
 			req.getSession().setAttribute("succeedDeleteMessage", "Xóa tài khoản thành công");
 			resp.sendRedirect("admin?action=accountList");
 			return;
+		} else if (action.equals("deleteAccounts")) {
+			String[] accountIds = req.getParameterValues("accountIds");
+		    if (accountIds != null) {
+		      AccountDAO accountDAO = new AccountDAO();
+		      for (String accountID : accountIds) {
+		    	  accountDAO.delete(accountID);
+		      }
+		      req.getSession().setAttribute("succeedDeleteMessage", "Xóa tài khoản thành công");
+		      resp.sendRedirect("admin?action=accountList");
+		    }
+		    else {
+		    	req.getSession().setAttribute("infoMessage", "Chưa có tài khoản nào được chọn");
+			    resp.sendRedirect("admin?action=accountList");
+		    }
 		}
 	}
 
