@@ -153,6 +153,8 @@
                                     <div style="max-height: 520.5px; overflow: auto;">
                                         <form method="post" action="admin">
                                             <input type="hidden" name="action" value="deleteAccounts">
+                                            <input type="hidden" id="randomCodeInput" name="randomCode">
+                                            <input type="hidden" id="deleteCodeConfirm" name="deleteCodeConfirm">
                                             <table class="table table-striped table-hover">
                                                 <thead>
                                                     <tr>
@@ -290,10 +292,58 @@
             }
         }
     </script>
+        <div class="modal fade" id="deleteAccountsModal" tabindex="-1" aria-labelledby="deleteAccountsModalLabel"
+        aria-hidden="true" style="position: fixed; top: 10%;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Xóa tài khoản</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="display: flex; flex-direction: column;">
+                    <p>Nhập lại mã sau để xác nhận xóa:
+                        <strong id="randomCode"></strong>
+                    </p>
+                    <input style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.3); margin-bottom: 15px; outline: none; padding: 5px 0px 5px 10px;" type="text" id="deleteCodeConfirmInput" placeholder="Nhập mã xác nhận" required />
+                    <p class="text-danger">Hành động này không thể hoàn tác!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button id="deleteTriggerBtn2" class="btn btn-danger">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         document.getElementById("deleteTriggerBtn").addEventListener("click", function () {
+            var myModal = new bootstrap.Modal(document.getElementById('deleteAccountsModal'));
+            myModal.show();
+            showDeleteConfirm();
+        });
+    </script>
+    <script>
+        document.getElementById("deleteTriggerBtn2").addEventListener("click", function () {
+            document.getElementById("deleteCodeConfirm").value = document.getElementById("deleteCodeConfirmInput").value;
             document.getElementById("submitDeleteBtn").click();
         });
+    </script>
+    <script>
+        let generatedCode = "";
+
+        function generateRandomCode(length = 6) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let code = '';
+            for (let i = 0; i < length; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function showDeleteConfirm() {
+            generatedCode = generateRandomCode();
+            document.getElementById("randomCode").textContent = generatedCode;
+            document.getElementById("randomCodeInput").value = generatedCode;
+        }
     </script>
 </body>
 

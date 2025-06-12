@@ -718,19 +718,26 @@ public class AdminController extends HttpServlet {
 			resp.sendRedirect("admin?action=accountList");
 			return;
 		} else if (action.equals("deleteAccounts")) {
-			String[] accountIds = req.getParameterValues("accountIds");
-		    if (accountIds != null) {
-		      AccountDAO accountDAO = new AccountDAO();
-		      for (String accountID : accountIds) {
-		    	  accountDAO.delete(accountID);
-		      }
-		      req.getSession().setAttribute("succeedDeleteMessage", "Xóa tài khoản thành công");
-		      resp.sendRedirect("admin?action=accountList");
-		    }
-		    else {
-		    	req.getSession().setAttribute("infoMessage", "Chưa có tài khoản nào được chọn");
+			String deleteCodeConfirm = req.getParameter("deleteCodeConfirm");
+			String randomCode = req.getParameter("randomCode");
+			if (deleteCodeConfirm == null || randomCode == null || !deleteCodeConfirm.trim().equals(randomCode.trim())) {
+				req.getSession().setAttribute("infoMessage", "Nhập mã xác nhận sai");
 			    resp.sendRedirect("admin?action=accountList");
-		    }
+			} else {
+				String[] accountIds = req.getParameterValues("accountIds");
+			    if (accountIds != null) {
+			      AccountDAO accountDAO = new AccountDAO();
+			      for (String accountID : accountIds) {
+			    	  accountDAO.delete(accountID);
+			      }
+			      req.getSession().setAttribute("succeedDeleteMessage", "Xóa tài khoản thành công");
+			      resp.sendRedirect("admin?action=accountList");
+			    }
+			    else {
+			    	req.getSession().setAttribute("infoMessage", "Chưa có tài khoản nào được chọn");
+				    resp.sendRedirect("admin?action=accountList");
+			    }
+			}
 		}
 	}
 
