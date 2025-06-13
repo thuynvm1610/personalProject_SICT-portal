@@ -98,6 +98,11 @@ public class AdminController extends HttpServlet {
 			    req.setAttribute("succeedDeleteMessage", succeedDeleteMessage);
 			    req.getSession().removeAttribute("succeedDeleteMessage");
 			}
+			String infoMessage = (String) req.getSession().getAttribute("infoMessage");
+			if (infoMessage != null) {
+			    req.setAttribute("infoMessage", infoMessage);
+			    req.getSession().removeAttribute("infoMessage");
+			}
 			req.getRequestDispatcher("view/admin/classroomList.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("studentList")) {
@@ -710,6 +715,27 @@ public class AdminController extends HttpServlet {
 			req.getSession().setAttribute("succeedDeleteMessage", "Xóa lớp học thành công");
 			resp.sendRedirect("admin?action=classroomList");
 			return;
+		} else if (action.equals("deleteClassrooms")) {
+			String deleteCodeConfirm = req.getParameter("deleteCodeConfirm");
+			String randomCode = req.getParameter("randomCode");
+			if (deleteCodeConfirm == null || randomCode == null || !deleteCodeConfirm.trim().equals(randomCode.trim())) {
+				req.getSession().setAttribute("infoMessage", "Nhập mã xác nhận sai");
+			    resp.sendRedirect("admin?action=classroomList");
+			} else {
+				String[] classroomIds = req.getParameterValues("classroomIds");
+			    if (classroomIds != null) {
+			      ClassroomDAO classroomDAO = new ClassroomDAO();
+			      for (String classroomID : classroomIds) {
+			    	  classroomDAO.delete(classroomID);
+			      }
+			      req.getSession().setAttribute("succeedDeleteMessage", "Xóa lớp học thành công");
+			      resp.sendRedirect("admin?action=classroomList");
+			    }
+			    else {
+			    	req.getSession().setAttribute("infoMessage", "Chưa có lớp học nào được chọn");
+				    resp.sendRedirect("admin?action=classroomList");
+			    }
+			}
 		} else if (action.equals("deleteStudent")) {
 			StudentDAO studentDAO = new StudentDAO();
 			studentDAO.delete(req.getParameter("studentID"));
