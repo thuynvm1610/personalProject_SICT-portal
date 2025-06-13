@@ -34,6 +34,11 @@
             &#9989; ${succeedDeleteMessage}
         </div>
     </c:if>
+    <c:if test="${not empty infoMessage}">
+        <div class="alert-info">
+            &#8505; ${infoMessage}
+        </div>
+    </c:if>
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
@@ -140,7 +145,15 @@
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <span>Danh sách sinh viên</span>
-                                <div class="filter-controls" style="margin: 0px 30px 0px auto;">
+                                <div style="margin: 0px 30px 0px auto;">
+                                    <span style="margin-right: 5px; font-weight: normal;">
+                                        Xóa sinh viên đã chọn
+                                    </span>
+                                    <button type="button" id="deleteTriggerBtn" class="btn btn-outline-secondary">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                                <div class="filter-controls" style="margin-right: 30px;">
                                     <span style="margin-right: 5px; font-weight: normal;" class="filter-controls__text">
                                         Bộ lọc
                                     </span>
@@ -163,63 +176,57 @@
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <div style="max-height: 520.5px; overflow: auto;">
-                                        <table class="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Mã SV</th>
-                                                    <th>Họ và tên</th>
-                                                    <th>Giới tính</th>
-                                                    <th>Ngày sinh</th>
-                                                    <th>Email</th>
-                                                    <th>Quê quán</th>
-                                                    <th>Hành động</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <c:forEach var="s" items="${studentList}">
+                                        <form method="post" action="admin">
+                                            <input type="hidden" name="action" value="deleteStudents">
+                                            <input type="hidden" id="randomCodeInput" name="randomCode">
+                                            <input type="hidden" id="deleteCodeConfirm" name="deleteCodeConfirm">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
                                                     <tr>
-                                                        <td>${s.studentID}</td>
-                                                        <td>${s.name}</td>
-                                                        <td>${s.gender}</td>
-                                                        <td>${s.dob}</td>
-                                                        <td>${s.email}</td>
-                                                        <td>${s.hometown}</td>
-                                                        <td>
-                                                            <div style="display: flex; gap: 5px;">
-                                                                <form method="get" action="admin">
-                                                                    <input type="hidden" name="action"
-                                                                        value="updateStudentForm" />
-                                                                    <input type="hidden" name="studentID"
-                                                                        value="${s.studentID}" />
-                                                                    <button class="btn btn-sm btn-warning"
-                                                                        type="submit">
-                                                                        <i class="fas fa-edit"></i>
-                                                                    </button>
-                                                                </form>
-                                                                <form method="get" action="admin">
-                                                                    <input type="hidden" name="action"
-                                                                        value="deleteStudentForm" />
-                                                                    <input type="hidden" name="studentID"
-                                                                        value="${s.studentID}" />
-                                                                    <button class="btn btn-sm btn-danger" type="submit">
-                                                                        <i class="fas fa-trash"></i>
-                                                                    </button>
-                                                                </form>
-                                                                <form method="get" action="admin">
-                                                                    <input type="hidden" name="action"
-                                                                        value="searchClassroomListByStudentID" />
-                                                                    <input type="hidden" name="studentID"
-                                                                        value="${s.studentID}" />
-                                                                    <button class="btn btn-sm btn-info" type="submit">
-                                                                        <i class="fas fa-eye"></i>
-                                                                    </button>
-                                                                </form>
-                                                            </div>
-                                                        </td>
+                                                        <th><input type="checkbox" id="checkAll" onclick="toggle(this)">
+                                                        </th>
+                                                        <th>Mã SV</th>
+                                                        <th>Họ và tên</th>
+                                                        <th>Giới tính</th>
+                                                        <th>Ngày sinh</th>
+                                                        <th>Email</th>
+                                                        <th>Quê quán</th>
+                                                        <th>Hành động</th>
                                                     </tr>
-                                                </c:forEach>
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    <c:forEach var="s" items="${studentList}">
+                                                        <tr>
+                                                            <td><input type="checkbox" name="studentIds"
+                                                                    value="${s.studentID}"></td>
+                                                            <td>${s.studentID}</td>
+                                                            <td>${s.name}</td>
+                                                            <td>${s.gender}</td>
+                                                            <td>${s.dob}</td>
+                                                            <td>${s.email}</td>
+                                                            <td>${s.hometown}</td>
+                                                            <td>
+                                                                <div style="display: flex; gap: 5px;">
+                                                                    <a class="btn btn-sm btn-warning"
+                                                                        href="admin?action=updateStudentForm&studentID=${s.studentID}">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-sm btn-danger"
+                                                                        href="admin?action=deleteStudentForm&studentID=${s.studentID}">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-sm btn-info"
+                                                                        href="admin?action=searchClassroomListByStudentID&studentID=${s.studentID}">
+                                                                        <i class="fas fa-eye"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </table>
+                                            <button id="submitDeleteBtn" style="display: none;" type="submit"></button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -287,6 +294,70 @@
             filterModal.style.display = 'none';
             overlay.style.display = 'none';
         });
+    </script>
+    <script>
+        function toggle(source) {
+            checkboxes = document.getElementsByName('studentIds');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
+    <div class="modal fade" id="deleteStudentsModal" tabindex="-1" aria-labelledby="deleteStudentsModalLabel"
+        aria-hidden="true" style="position: fixed; top: 10%;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Xóa sinh viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="display: flex; flex-direction: column;">
+                    <p>Nhập lại mã sau để xác nhận xóa:
+                        <strong id="randomCode"></strong>
+                    </p>
+                    <input
+                        style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.3); margin-bottom: 15px; outline: none; padding: 5px 0px 5px 10px;"
+                        type="text" id="deleteCodeConfirmInput" placeholder="Nhập mã xác nhận" required />
+                    <p class="text-danger">Hành động này không thể hoàn tác!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button id="deleteTriggerBtn2" class="btn btn-danger">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("deleteTriggerBtn").addEventListener("click", function () {
+            var myModal = new bootstrap.Modal(document.getElementById('deleteStudentsModal'));
+            myModal.show();
+            showDeleteConfirm();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("deleteTriggerBtn2").addEventListener("click", function () {
+            document.getElementById("deleteCodeConfirm").value = document.getElementById("deleteCodeConfirmInput").value;
+            document.getElementById("submitDeleteBtn").click();
+        });
+    </script>
+    <script>
+        let generatedCode = "";
+
+        function generateRandomCode(length = 6) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let code = '';
+            for (let i = 0; i < length; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function showDeleteConfirm() {
+            generatedCode = generateRandomCode();
+            document.getElementById("randomCode").textContent = generatedCode;
+            document.getElementById("randomCodeInput").value = generatedCode;
+        }
     </script>
 </body>
 
