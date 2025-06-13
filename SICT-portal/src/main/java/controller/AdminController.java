@@ -54,6 +54,11 @@ public class AdminController extends HttpServlet {
 			    req.setAttribute("succeedDeleteMessage", succeedDeleteMessage);
 			    req.getSession().removeAttribute("succeedDeleteMessage");
 			}
+			String infoMessage = (String) req.getSession().getAttribute("infoMessage");
+			if (infoMessage != null) {
+			    req.setAttribute("infoMessage", infoMessage);
+			    req.getSession().removeAttribute("infoMessage");
+			}
 			List<Integer> yobList = teacherDAO.getListOfYear();
 			req.setAttribute("yobList", yobList);
 			List<String> hometownList = teacherDAO.getListOfHometown();
@@ -678,6 +683,27 @@ public class AdminController extends HttpServlet {
 			req.getSession().setAttribute("succeedDeleteMessage", "Xóa giáo viên thành công");
 			resp.sendRedirect("admin?action=teacherList");
 			return;
+		} else if (action.equals("deleteTeachers")) {
+			String deleteCodeConfirm = req.getParameter("deleteCodeConfirm");
+			String randomCode = req.getParameter("randomCode");
+			if (deleteCodeConfirm == null || randomCode == null || !deleteCodeConfirm.trim().equals(randomCode.trim())) {
+				req.getSession().setAttribute("infoMessage", "Nhập mã xác nhận sai");
+			    resp.sendRedirect("admin?action=teacherList");
+			} else {
+				String[] teacherIds = req.getParameterValues("teacherIds");
+			    if (teacherIds != null) {
+			      TeacherDAO teacherDAO = new TeacherDAO();
+			      for (String teacherID : teacherIds) {
+			    	  teacherDAO.delete(teacherID);
+			      }
+			      req.getSession().setAttribute("succeedDeleteMessage", "Xóa giáo viên thành công");
+			      resp.sendRedirect("admin?action=teacherList");
+			    }
+			    else {
+			    	req.getSession().setAttribute("infoMessage", "Chưa có giáo viên nào được chọn");
+				    resp.sendRedirect("admin?action=teacherList");
+			    }
+			}
 		} else if (action.equals("deleteClassroom")) {
 			ClassroomDAO classroomDAO = new ClassroomDAO();
 			classroomDAO.delete(req.getParameter("classroomID"));
