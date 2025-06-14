@@ -773,6 +773,8 @@ public class AdminController extends HttpServlet {
 				message.append("Mã lớp không tồn tại<br>");
 			} else if (studentDAO.findByID(req.getParameter("studentID")) == null) {
 				message.append("Mã sinh viên không tồn tại<br>");
+			} else if (student_classroomDAO.findByID(req.getParameter("classroomID"), req.getParameter("studentID")).isEmpty()) {
+				message.append("Sinh viên " + req.getParameter("studentID") + " không học lớp " + req.getParameter("classroomID"));
 			}
 			
 			if (message.length() > 0) {
