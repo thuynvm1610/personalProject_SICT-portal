@@ -305,4 +305,52 @@ public class StudentDAO {
 		return hometownList;
 	}
 
+	public List<Student> getStudentsPaginated(int start, int limit) {
+	    List<Student> studentList = new ArrayList<>();
+	    String sql = "select * from student limit ?, ?";
+	    DBConnect dbConn = new DBConnect();
+	    try {
+	    	Connection conn = dbConn.getConnection();
+	    	PreparedStatement pstmt = conn.prepareStatement(sql);
+	    	pstmt.setInt(1, start);
+	    	pstmt.setInt(2, limit);
+	        ResultSet rs = pstmt.executeQuery();
+	        while (rs.next()) {
+	        	Student student = new Student();
+				student.setStudentID(rs.getString("studentID"));
+				student.setName(rs.getString("name"));
+				student.setGender(rs.getString("gender"));
+				student.setDob(rs.getDate("dob"));
+				student.setEmail(rs.getString("email"));
+				student.setHometown(rs.getString("hometown"));
+				studentList.add(student);
+	        }
+	        conn.close();
+			pstmt.close();
+			rs.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return studentList;
+	}
+
+	public int countStudents() {
+	    String sql = "select count(*) from student";
+	    DBConnect dbConn = new DBConnect();
+	    int result = 0;
+	    try {
+	    	Connection conn = dbConn.getConnection();
+	    	Statement stmt = conn.createStatement();
+	        ResultSet rs = stmt.executeQuery(sql);
+	        if (rs.next()) {
+	            result = rs.getInt(1);
+	        }
+	        conn.close();
+			rs.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+
 }
