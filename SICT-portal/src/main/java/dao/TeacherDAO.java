@@ -260,5 +260,53 @@ public class TeacherDAO {
 		}
 		return hometownList;
 	}
+	
+	public List<Teacher> getTeachersPaginated(int start, int limit) {
+	    List<Teacher> teacherList = new ArrayList<>();
+	    String sql = "select * from teacher limit ?, ?";
+	    DBConnect dbConn = new DBConnect();
+	    try {
+	    	Connection conn = dbConn.getConnection();
+	    	PreparedStatement pstmt = conn.prepareStatement(sql);
+	    	pstmt.setInt(1, start);
+	    	pstmt.setInt(2, limit);
+	        ResultSet rs = pstmt.executeQuery();
+	        while (rs.next()) {
+	        	Teacher teacher = new Teacher();
+				teacher.setTeacherID(rs.getString("teacherID"));
+				teacher.setName(rs.getString("name"));
+				teacher.setGender(rs.getString("gender"));
+				teacher.setDob(rs.getDate("dob"));
+				teacher.setEmail(rs.getString("email"));
+				teacher.setHometown(rs.getString("hometown"));
+				teacherList.add(teacher);
+	        }
+	        conn.close();
+			pstmt.close();
+			rs.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return teacherList;
+	}
+
+	public int countTeachers() {
+	    String sql = "select count(*) from teacher";
+	    DBConnect dbConn = new DBConnect();
+	    int result = 0;
+	    try {
+	    	Connection conn = dbConn.getConnection();
+	    	Statement stmt = conn.createStatement();
+	        ResultSet rs = stmt.executeQuery(sql);
+	        if (rs.next()) {
+	            result = rs.getInt(1);
+	        }
+	        conn.close();
+			rs.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
 
 }
