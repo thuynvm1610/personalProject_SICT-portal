@@ -101,8 +101,28 @@ public class AdminController extends HttpServlet {
 			req.getRequestDispatcher("view/admin/teacherList.jsp").forward(req, resp);
 		} else if (action.equals("classroomList")) {
 			ClassroomDAO classroomDAO = new ClassroomDAO();
-			List<Classroom> classroomList = classroomDAO.findAll();
+			
+			int recordsPerPage = 5;
+			int currentPage = 1;
+
+			String pageStr = req.getParameter("page");
+			if (pageStr != null) {
+			    currentPage = Integer.parseInt(pageStr);
+			}
+			int start = (currentPage - 1) * recordsPerPage;
+
+			List<Classroom> classroomList = classroomDAO.getClassroomsPaginated(start, recordsPerPage);
+			int totalRecords = classroomDAO.countClassrooms();
+			int totalPages = (int) Math.ceil(totalRecords * 1.0 / recordsPerPage);
+
+			req.setAttribute("classroomList", classroomList);
+			req.setAttribute("currentPage", currentPage);
+			req.setAttribute("totalPages", totalPages);
+			
 			req.getSession().setAttribute("classroomList", classroomList);
+			req.getSession().setAttribute("currentPage", currentPage);
+			req.getSession().setAttribute("totalPages", totalPages);
+			
 			String succeedAddMessage = (String) req.getSession().getAttribute("succeedAddMessage");
 			if (succeedAddMessage != null) {
 			    req.setAttribute("succeedAddMessage", succeedAddMessage);
@@ -383,6 +403,14 @@ public class AdminController extends HttpServlet {
 			req.getRequestDispatcher("view/admin/addTeacher.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("addClassroomForm")) {
+			List<Classroom> classroomList = (List<Classroom>) req.getSession().getAttribute("classroomList");
+			int currentPage = (int) req.getSession().getAttribute("currentPage");
+			int totalPages = (int) req.getSession().getAttribute("totalPages");
+			
+			req.setAttribute("classroomList", classroomList);
+			req.setAttribute("currentPage", currentPage);
+			req.setAttribute("totalPages", totalPages);
+			
 			req.getRequestDispatcher("view/admin/addClassroom.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("addStudentForm")) {
@@ -438,6 +466,15 @@ public class AdminController extends HttpServlet {
 			ClassroomDAO classroomDAO = new ClassroomDAO();
 			Classroom classroom = classroomDAO.findByID(classroomID);
 			req.setAttribute("classroom", classroom);
+			
+			List<Classroom> classroomList = (List<Classroom>) req.getSession().getAttribute("classroomList");
+			int currentPage = (int) req.getSession().getAttribute("currentPage");
+			int totalPages = (int) req.getSession().getAttribute("totalPages");
+			
+			req.setAttribute("classroomList", classroomList);
+			req.setAttribute("currentPage", currentPage);
+			req.setAttribute("totalPages", totalPages);
+			
 			req.getRequestDispatcher("view/admin/updateClassroom.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("updateStudentForm")) {
@@ -497,6 +534,15 @@ public class AdminController extends HttpServlet {
 		} else if (action.equals("deleteClassroomForm")) {
 			String classroomID = req.getParameter("classroomID");
 			req.setAttribute("classroomID", classroomID);
+			
+			List<Classroom> classroomList = (List<Classroom>) req.getSession().getAttribute("classroomList");
+			int currentPage = (int) req.getSession().getAttribute("currentPage");
+			int totalPages = (int) req.getSession().getAttribute("totalPages");
+			
+			req.setAttribute("classroomList", classroomList);
+			req.setAttribute("currentPage", currentPage);
+			req.setAttribute("totalPages", totalPages);
+			
 			req.getRequestDispatcher("view/admin/deleteClassroom.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("deleteStudentForm")) {

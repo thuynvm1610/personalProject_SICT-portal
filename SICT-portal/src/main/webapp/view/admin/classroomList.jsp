@@ -216,6 +216,48 @@
                                             <button id="submitDeleteBtn" style="display: none;" type="submit"></button>
                                         </form>
                                     </div>
+                                    <%
+                                        int groupSize = 5;
+                                        int currentPage = (Integer) request.getAttribute("currentPage");
+                                        int totalPages = (Integer) request.getAttribute("totalPages");
+
+                                        int groupStart = ((currentPage - 1) / groupSize) * groupSize + 1;
+                                        int groupEnd = Math.min(groupStart + groupSize - 1, totalPages);
+                                    %>
+            
+                                    <div class="pagination">
+                                        <!-- Nút về trang đầu -->
+                                        <c:if test="${currentPage > 1}">
+                                            <a href="admin?action=classroomList&page=1">« First</a>
+                                        </c:if>
+            
+                                        <!-- Nút Prev -->
+                                        <c:if test="${currentPage > 1}">
+                                            <a href="admin?action=classroomList&page=${currentPage - 1}">‹
+                                                Prev</a>
+                                        </c:if>
+            
+                                        <!-- Các trang trong nhóm -->
+                                        <% for (int i=groupStart; i <=groupEnd; i++) { %>
+                                            <a href="admin?action=classroomList&page=<%=i%>"
+                                                class="<%= (i == currentPage) ? " current" : "" %>">
+                                                <%=i%>
+                                            </a>
+                                            <% } %>
+            
+                                                <!-- Nút Next -->
+                                                <c:if test="${currentPage < totalPages}">
+                                                    <a
+                                                        href="admin?action=classroomList&page=${currentPage + 1}">Next
+                                                        ›</a>
+                                                </c:if>
+            
+                                                <!-- Nút tới trang cuối -->
+                                                <c:if test="${currentPage < totalPages}">
+                                                    <a href="admin?action=classroomList&page=${totalPages}">Last
+                                                        »</a>
+                                                </c:if>
+                                    </div>
                                 </div>
                             </div>
                         </div>

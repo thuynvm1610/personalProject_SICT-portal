@@ -185,4 +185,49 @@ public class ClassroomDAO {
 		return classroomName;
 	}
 	
+	public List<Classroom> getClassroomsPaginated(int start, int limit) {
+	    List<Classroom> classroomList = new ArrayList<>();
+	    String sql = "select * from classroom limit ?, ?";
+	    DBConnect dbConn = new DBConnect();
+	    try {
+	    	Connection conn = dbConn.getConnection();
+	    	PreparedStatement pstmt = conn.prepareStatement(sql);
+	    	pstmt.setInt(1, start);
+	    	pstmt.setInt(2, limit);
+	        ResultSet rs = pstmt.executeQuery();
+	        while (rs.next()) {
+	        	Classroom classroom = new Classroom();
+				classroom.setClassroomID(rs.getString("classroomID"));
+				classroom.setName(rs.getString("name"));
+				classroom.setTeacherID(rs.getString("teacherID"));
+				classroomList.add(classroom);
+	        }
+	        conn.close();
+			pstmt.close();
+			rs.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return classroomList;
+	}
+
+	public int countClassrooms() {
+	    String sql = "select count(*) from classroom";
+	    DBConnect dbConn = new DBConnect();
+	    int result = 0;
+	    try {
+	    	Connection conn = dbConn.getConnection();
+	    	Statement stmt = conn.createStatement();
+	        ResultSet rs = stmt.executeQuery(sql);
+	        if (rs.next()) {
+	            result = rs.getInt(1);
+	        }
+	        conn.close();
+			rs.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+	
 }
