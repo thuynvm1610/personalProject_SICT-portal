@@ -1,0 +1,870 @@
+package controller;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dao.AccountDAO;
+import dao.ClassroomDAO;
+import dao.StudentDAO;
+import dao.Student_classroomDAO;
+import dao.TeacherDAO;
+import model.Account;
+import model.Classroom;
+import model.Student;
+import model.Student_classroom;
+import model.Teacher;
+
+@WebServlet(urlPatterns = "/admin")
+public class AdminController extends HttpServlet {
+
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
+
+		String action = req.getParameter("action");
+
+		if (action.equals("teacherList")) {
+			TeacherDAO teacherDAO = new TeacherDAO();
+			List<Teacher> teacherList = teacherDAO.findAll();
+			req.getSession().setAttribute("teacherList", teacherList);
+			String succeedAddMessage = (String) req.getSession().getAttribute("succeedAddMessage");
+			if (succeedAddMessage != null) {
+			    req.setAttribute("succeedAddMessage", succeedAddMessage);
+			    req.getSession().removeAttribute("succeedAddMessage");
+			}
+			String succeedUpdateMessage = (String) req.getSession().getAttribute("succeedUpdateMessage");
+			if (succeedUpdateMessage != null) {
+			    req.setAttribute("succeedUpdateMessage", succeedUpdateMessage);
+			    req.getSession().removeAttribute("succeedUpdateMessage");
+			}
+			String succeedDeleteMessage = (String) req.getSession().getAttribute("succeedDeleteMessage");
+			if (succeedDeleteMessage != null) {
+			    req.setAttribute("succeedDeleteMessage", succeedDeleteMessage);
+			    req.getSession().removeAttribute("succeedDeleteMessage");
+			}
+			String infoMessage = (String) req.getSession().getAttribute("infoMessage");
+			if (infoMessage != null) {
+			    req.setAttribute("infoMessage", infoMessage);
+			    req.getSession().removeAttribute("infoMessage");
+			}
+			List<Integer> yobList = teacherDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = teacherDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getRequestDispatcher("view/admin/teacherList.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("teacherFilter")) {
+			String gender = req.getParameter("gender");
+			String yob = req.getParameter("yob");
+			String hometown = req.getParameter("hometown");
+			TeacherDAO teacherDAO = new TeacherDAO();
+			List<Teacher> teacherList = new ArrayList<>();
+			
+			teacherList = teacherDAO.teacherListByFilter(gender, yob, hometown);
+			List<Integer> yobList = teacherDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = teacherDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getSession().setAttribute("teacherList", teacherList);
+			req.getRequestDispatcher("view/admin/teacherList.jsp").forward(req, resp);
+		} else if (action.equals("classroomList")) {
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			List<Classroom> classroomList = classroomDAO.findAll();
+			req.getSession().setAttribute("classroomList", classroomList);
+			String succeedAddMessage = (String) req.getSession().getAttribute("succeedAddMessage");
+			if (succeedAddMessage != null) {
+			    req.setAttribute("succeedAddMessage", succeedAddMessage);
+			    req.getSession().removeAttribute("succeedAddMessage");
+			}
+			String succeedUpdateMessage = (String) req.getSession().getAttribute("succeedUpdateMessage");
+			if (succeedUpdateMessage != null) {
+			    req.setAttribute("succeedUpdateMessage", succeedUpdateMessage);
+			    req.getSession().removeAttribute("succeedUpdateMessage");
+			}
+			String succeedDeleteMessage = (String) req.getSession().getAttribute("succeedDeleteMessage");
+			if (succeedDeleteMessage != null) {
+			    req.setAttribute("succeedDeleteMessage", succeedDeleteMessage);
+			    req.getSession().removeAttribute("succeedDeleteMessage");
+			}
+			String infoMessage = (String) req.getSession().getAttribute("infoMessage");
+			if (infoMessage != null) {
+			    req.setAttribute("infoMessage", infoMessage);
+			    req.getSession().removeAttribute("infoMessage");
+			}
+			req.getRequestDispatcher("view/admin/classroomList.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("studentList")) {
+			StudentDAO studentDAO = new StudentDAO();
+			List<Student> studentList = studentDAO.findAll();
+			req.getSession().setAttribute("studentList", studentList);
+			String succeedAddMessage = (String) req.getSession().getAttribute("succeedAddMessage");
+			if (succeedAddMessage != null) {
+			    req.setAttribute("succeedAddMessage", succeedAddMessage);
+			    req.getSession().removeAttribute("succeedAddMessage");
+			}
+			String succeedUpdateMessage = (String) req.getSession().getAttribute("succeedUpdateMessage");
+			if (succeedUpdateMessage != null) {
+			    req.setAttribute("succeedUpdateMessage", succeedUpdateMessage);
+			    req.getSession().removeAttribute("succeedUpdateMessage");
+			}
+			String succeedDeleteMessage = (String) req.getSession().getAttribute("succeedDeleteMessage");
+			if (succeedDeleteMessage != null) {
+			    req.setAttribute("succeedDeleteMessage", succeedDeleteMessage);
+			    req.getSession().removeAttribute("succeedDeleteMessage");
+			}
+			String infoMessage = (String) req.getSession().getAttribute("infoMessage");
+			if (infoMessage != null) {
+			    req.setAttribute("infoMessage", infoMessage);
+			    req.getSession().removeAttribute("infoMessage");
+			}
+			List<Integer> yobList = studentDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = studentDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getRequestDispatcher("view/admin/studentList.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("studentFilter")) {
+			String gender = req.getParameter("gender");
+			String yob = req.getParameter("yob");
+			String hometown = req.getParameter("hometown");
+			StudentDAO studentDAO = new StudentDAO();
+			List<Student> studentList = new ArrayList<Student>();
+			
+			studentList = studentDAO.studentListByFilter(gender, yob, hometown);
+			List<Integer> yobList = studentDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = studentDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getSession().setAttribute("studentList", studentList);
+			req.getRequestDispatcher("view/admin/studentList.jsp").forward(req, resp);
+		} else if (action.equals("student_classroom")) {
+			req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("accountList")) {
+			AccountDAO accountDAO = new AccountDAO();		
+			int recordsPerPage = 30;
+			int currentPage = 1;
+
+			String pageStr = req.getParameter("page");
+			if (pageStr != null) {
+			    currentPage = Integer.parseInt(pageStr);
+			}
+			int start = (currentPage - 1) * recordsPerPage;
+
+			List<Account> accountList = accountDAO.getAccountsPaginated(start, recordsPerPage);
+			int totalRecords = accountDAO.countAccounts();
+			int totalPages = (int) Math.ceil(totalRecords * 1.0 / recordsPerPage);
+
+			req.setAttribute("accountList", accountList);
+			req.setAttribute("currentPage", currentPage);
+			req.setAttribute("totalPages", totalPages);
+			
+			req.getSession().setAttribute("accountList", accountList);
+			req.getSession().setAttribute("currentPage", currentPage);
+			req.getSession().setAttribute("totalPages", totalPages);
+
+			String succeedAddMessage = (String) req.getSession().getAttribute("succeedAddMessage");
+			if (succeedAddMessage != null) {
+			    req.setAttribute("succeedAddMessage", succeedAddMessage);
+			    req.getSession().removeAttribute("succeedAddMessage");
+			}
+			String succeedUpdateMessage = (String) req.getSession().getAttribute("succeedUpdateMessage");
+			if (succeedUpdateMessage != null) {
+			    req.setAttribute("succeedUpdateMessage", succeedUpdateMessage);
+			    req.getSession().removeAttribute("succeedUpdateMessage");
+			}
+			String succeedDeleteMessage = (String) req.getSession().getAttribute("succeedDeleteMessage");
+			if (succeedDeleteMessage != null) {
+			    req.setAttribute("succeedDeleteMessage", succeedDeleteMessage);
+			    req.getSession().removeAttribute("succeedDeleteMessage");
+			}
+			String infoMessage = (String) req.getSession().getAttribute("infoMessage");
+			if (infoMessage != null) {
+			    req.setAttribute("infoMessage", infoMessage);
+			    req.getSession().removeAttribute("infoMessage");
+			}
+			req.getRequestDispatcher("view/admin/accountList.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("accountFilter")) {
+			String role = req.getParameter("role");
+			AccountDAO accountDAO = new AccountDAO();
+			List<Account> accountList = new ArrayList<>();
+			
+			accountList = accountDAO.accountListByRole(role);
+			req.getSession().setAttribute("accountList", accountList);
+			req.getRequestDispatcher("view/admin/accountList.jsp").forward(req, resp);
+		} else if (action.equals("searchTeacher")) {
+			String teacherID = req.getParameter("teacherID");
+			TeacherDAO teacherDAO = new TeacherDAO();
+			Teacher teacher = teacherDAO.findById(teacherID);
+			if (teacher != null) {
+				req.setAttribute("teacherList", List.of(teacher));
+			} else {
+				req.setAttribute("message", "Không tìm thấy giáo viên " + teacherID);
+				req.setAttribute("teacherList", List.of());
+			}
+			req.getRequestDispatcher("view/admin/teacherList.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("searchClassroom")) {
+			String classroomID = req.getParameter("classroomID");
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			Classroom classroom = classroomDAO.findByID(classroomID);
+			if (classroom != null) {
+				req.setAttribute("classroomList", List.of(classroom));
+			} else {
+				req.setAttribute("message", "Không tìm thấy lớp học " + classroomID);
+				req.setAttribute("classroomList", List.of());
+			}
+			req.getRequestDispatcher("view/admin/classroomList.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("searchStudent")) {
+			String studentID = req.getParameter("studentID");
+			StudentDAO studentDAO = new StudentDAO();
+			Student student = studentDAO.findByID(studentID);
+			if (student != null) {
+				req.setAttribute("studentList", List.of(student));
+			} else {
+				req.setAttribute("message", "Không tìm thấy sinh viên " + studentID);
+				req.setAttribute("studentList", List.of());
+			}
+			req.getRequestDispatcher("view/admin/studentList.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("searchClassroomListByTeacherID")) {
+			String teacherID = req.getParameter("teacherID");
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			List<Classroom> classroomList = classroomDAO.findByTeacherID(teacherID);
+			req.setAttribute("classroomList", classroomList);
+			req.setAttribute("teacherID", teacherID);
+			if (classroomList.isEmpty()) {	
+				req.setAttribute("message", "Giáo viên " + teacherID + " hiện chưa dạy lớp nào");
+			}
+			req.getRequestDispatcher("view/admin/classroomListByTeacherID.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("searchClassroomListByStudentID")) {
+			String studentID = req.getParameter("studentID");
+			StudentDAO studentDAO = new StudentDAO();
+			Student student = studentDAO.findByID(studentID);
+			if (student == null) {
+				req.setAttribute("message", "Không tìm thấy sinh viên " + req.getParameter("studentID"));
+				req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
+			}
+			else {
+				Student_classroomDAO student_classroomDAO = new Student_classroomDAO();
+				List<Student_classroom> student_classroomList = student_classroomDAO.findByID(null, studentID);
+				List<Classroom> classroomList = new ArrayList<>();
+				ClassroomDAO classroomDAO = new ClassroomDAO();
+				for (int i = 0; i < student_classroomList.size(); i++) {
+					String classroomID = student_classroomList.get(i).getClassroomID();
+					String classroomName = classroomDAO.getClassroomName(classroomID);
+					Classroom classroom = new Classroom();
+					classroom.setClassroomID(classroomID);
+					classroom.setName(classroomName);
+					classroom.setTeacherID(null);
+					classroomList.add(classroom);
+				}
+				req.setAttribute("classroomList", classroomList);
+				req.setAttribute("studentID", studentID);
+				if (student_classroomList.isEmpty()) {
+					req.setAttribute("message", "Sinh viên " + req.getParameter("studentID") + " hiện chưa học lớp nào");
+				}
+				req.getRequestDispatcher("view/admin/classroomListByStudentID.jsp").forward(req, resp);
+			}
+			return;
+		} else if (action.equals("searchStudentListByClassroomID")) {
+			String classroomID = req.getParameter("classroomID");
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			Classroom classroom = classroomDAO.findByID(classroomID);
+			if (classroom == null) {
+				req.setAttribute("message", "Không tìm thấy lớp học " + req.getParameter("classroomID"));
+				req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
+			}
+			else {
+				Student_classroomDAO student_classroomDAO = new Student_classroomDAO();
+				List<Student_classroom> student_classroomList = student_classroomDAO.findByID(classroomID, null);
+				List<Student> studentList = new ArrayList<>();
+				StudentDAO studentDAO = new StudentDAO();
+				for (int i = 0; i < student_classroomList.size(); i++) {
+					String studentID = student_classroomList.get(i).getStudentID();
+					String studentName = studentDAO.getStudentName(studentID);
+					Student student = new Student();
+					student.setStudentID(studentID);
+					student.setName(studentName);
+					student.setDob(null);
+					student.setEmail(null);
+					student.setGender(null);
+					studentList.add(student);
+				}
+				req.setAttribute("studentList", studentList);
+				req.setAttribute("classroomID", classroomID);
+				if (student_classroomList.isEmpty()) {
+					req.setAttribute("message", "Lớp " + req.getParameter("classroomID") + " hiện chưa có sinh viên nào");
+				}
+				req.getRequestDispatcher("view/admin/studentListByClassroomID.jsp").forward(req, resp);
+			}
+			return;
+		} else if (action.equals("searchAccount")) {
+			String accountID = req.getParameter("accountID");
+			AccountDAO accountDAO = new AccountDAO();
+			Account account = accountDAO.findByID(accountID);
+			if (account != null) {
+				req.setAttribute("accountList", List.of(account));
+			} else {
+				req.setAttribute("message", "Không tìm thấy tài khoản " + accountID);
+				req.setAttribute("accountList", List.of());
+			}
+			req.getRequestDispatcher("view/admin/accountList.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("addTeacherForm")) {
+			TeacherDAO teacherDAO = new TeacherDAO();
+			List<Integer> yobList = teacherDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = teacherDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getRequestDispatcher("view/admin/addTeacher.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("addClassroomForm")) {
+			req.getRequestDispatcher("view/admin/addClassroom.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("addStudentForm")) {
+			StudentDAO studentDAO = new StudentDAO();
+			List<Integer> yobList = studentDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = studentDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getRequestDispatcher("view/admin/addStudent.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("addAccountForm")) {
+			List<Account> accountList = (List<Account>) req.getSession().getAttribute("accountList");
+			int currentPage = (int) req.getSession().getAttribute("currentPage");
+			int totalPages = (int) req.getSession().getAttribute("totalPages");
+			
+			req.setAttribute("accountList", accountList);
+			req.setAttribute("currentPage", currentPage);
+			req.setAttribute("totalPages", totalPages);
+			
+			req.getRequestDispatcher("view/admin/addAccount.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("updateTeacherForm")) {
+			String teacherID = req.getParameter("teacherID");
+			TeacherDAO teacherDAO = new TeacherDAO();
+			Teacher teacher = teacherDAO.findById(teacherID);
+			req.setAttribute("teacher", teacher);
+			List<Integer> yobList = teacherDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = teacherDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getRequestDispatcher("view/admin/updateTeacher.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("updateClassroomForm")) {
+			String classroomID = req.getParameter("classroomID");
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			Classroom classroom = classroomDAO.findByID(classroomID);
+			req.setAttribute("classroom", classroom);
+			req.getRequestDispatcher("view/admin/updateClassroom.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("updateStudentForm")) {
+			String studentID = req.getParameter("studentID");
+			StudentDAO studentDAO = new StudentDAO();
+			Student student = studentDAO.findByID(studentID);
+			req.setAttribute("student", student);
+			List<Integer> yobList = studentDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = studentDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getRequestDispatcher("view/admin/updateStudent.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("updateAccountForm")) {
+			String accountID = req.getParameter("accountID");
+			AccountDAO accountDAO = new AccountDAO();
+			Account account = accountDAO.findByID(accountID);
+			req.setAttribute("account", account);
+			List<Account> accountList = (List<Account>) req.getSession().getAttribute("accountList");
+			int currentPage = (int) req.getSession().getAttribute("currentPage");
+			int totalPages = (int) req.getSession().getAttribute("totalPages");
+			
+			req.setAttribute("accountList", accountList);
+			req.setAttribute("currentPage", currentPage);
+			req.setAttribute("totalPages", totalPages);
+			
+			req.getRequestDispatcher("view/admin/updateAccount.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("deleteTeacherForm")) {
+			String teacherID = req.getParameter("teacherID");
+			req.setAttribute("teacherID", teacherID);
+			TeacherDAO teacherDAO = new TeacherDAO();
+			List<Integer> yobList = teacherDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = teacherDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getRequestDispatcher("view/admin/deleteTeacher.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("deleteClassroomForm")) {
+			String classroomID = req.getParameter("classroomID");
+			req.setAttribute("classroomID", classroomID);
+			req.getRequestDispatcher("view/admin/deleteClassroom.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("deleteStudentForm")) {
+			String studentID = req.getParameter("studentID");
+			req.setAttribute("studentID", studentID);
+			StudentDAO studentDAO = new StudentDAO();
+			List<Integer> yobList = studentDAO.getListOfYear();
+			req.setAttribute("yobList", yobList);
+			List<String> hometownList = studentDAO.getListOfHometown();
+			req.setAttribute("hometownList", hometownList);
+			req.getRequestDispatcher("view/admin/deleteStudent.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("deleteAccountForm")) {
+			String accountID = req.getParameter("accountID");
+			req.setAttribute("accountID", accountID);
+			
+			List<Account> accountList = (List<Account>) req.getSession().getAttribute("accountList");
+			int currentPage = (int) req.getSession().getAttribute("currentPage");
+			int totalPages = (int) req.getSession().getAttribute("totalPages");
+			
+			req.setAttribute("accountList", accountList);
+			req.setAttribute("currentPage", currentPage);
+			req.setAttribute("totalPages", totalPages);
+			
+			req.getRequestDispatcher("view/admin/deleteAccount.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("dashboard")) {
+			StudentDAO studentDAO = new StudentDAO();
+			int totalStudent = studentDAO.totalStudent();
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			int totalClassroom = classroomDAO.totalClassroom();
+			TeacherDAO teacherDAO = new TeacherDAO();
+			int totalTeacher = teacherDAO.totalTeacher();
+			AccountDAO accountDAO = new AccountDAO();
+			int totalAccount = accountDAO.totalAccount();
+			req.setAttribute("totalStudent", totalStudent);
+			req.setAttribute("totalClassroom", totalClassroom);
+			req.setAttribute("totalTeacher", totalTeacher);
+			req.setAttribute("totalAccount", totalAccount);
+			req.getRequestDispatcher("view/admin/dashboard.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("logout")) {
+			HttpSession session = req.getSession(false);
+		    if (session != null) {
+		        session.invalidate();
+		    }
+			req.getRequestDispatcher("view/login/loginForm.jsp").forward(req, resp);
+			return;
+		}
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
+
+		String action = req.getParameter("action");
+
+		if (action.equals("addTeacher")) {
+			TeacherDAO teacherDAO = new TeacherDAO();
+			StringBuilder message = new StringBuilder();
+
+			if (teacherDAO.findById(req.getParameter("teacherID")) != null) {
+				message.append("Mã giáo viên đã tồn tại<br>");
+			} else if (teacherDAO.isEmailExists(req.getParameter("email"), req.getParameter("teacherID"))) {
+				message.append("Email đã được sử dụng<br>");
+			}
+
+			Teacher teacher = new Teacher();
+			teacher.setTeacherID(req.getParameter("teacherID"));
+			teacher.setName(req.getParameter("name"));
+			teacher.setGender(req.getParameter("gender"));
+			teacher.setDob(Date.valueOf(req.getParameter("dob")));
+			teacher.setEmail(req.getParameter("email"));
+			teacher.setHometown(req.getParameter("hometown"));
+
+			if (message.length() > 0) {
+				req.setAttribute("teacher", teacher);
+				req.setAttribute("message", message.toString());
+				req.getRequestDispatcher("view/admin/addTeacher.jsp").forward(req, resp);
+				return;
+			}
+
+			teacherDAO.insert(teacher);
+			req.getSession().setAttribute("succeedAddMessage", "Thêm giáo viên thành công");
+			resp.sendRedirect("admin?action=teacherList");
+			return;
+		} else if (action.equals("addClassroom")) {
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			TeacherDAO teacherDAO = new TeacherDAO();
+			StringBuilder message = new StringBuilder();
+
+			if (classroomDAO.findByID(req.getParameter("classroomID")) != null) {
+				message.append("Mã lớp học đã tồn tại<br>");
+			} else if (teacherDAO.findById(req.getParameter("teacherID")) == null) {
+				message.append("Mã giáo viên không tồn tại<br>");
+			}
+
+			Classroom classroom = new Classroom();
+			classroom.setClassroomID(req.getParameter("classroomID"));
+			classroom.setName(req.getParameter("name"));
+			classroom.setTeacherID(req.getParameter("teacherID"));
+
+			if (message.length() > 0) {
+				req.setAttribute("classroom", classroom);
+				req.setAttribute("message", message.toString());
+				req.getRequestDispatcher("view/admin/addClassroom.jsp").forward(req, resp);
+				return;
+			}
+
+			classroomDAO.insert(classroom);
+			req.getSession().setAttribute("succeedAddMessage", "Thêm lớp học thành công");
+			resp.sendRedirect("admin?action=classroomList");
+			return;
+		} else if (action.equals("addStudent")) {
+			StudentDAO studentDAO = new StudentDAO();
+			StringBuilder message = new StringBuilder();
+
+			if (studentDAO.findByID(req.getParameter("studentID")) != null) {
+				message.append("Mã sinh viên đã tồn tại<br>");
+			} else if (studentDAO.isEmailExists(req.getParameter("email"), req.getParameter("studentID"))) {
+				message.append("Email đã được sử dụng<br>");
+			}
+			Student student = new Student();
+			student.setStudentID(req.getParameter("studentID"));
+			student.setName(req.getParameter("name"));
+			student.setGender(req.getParameter("gender"));
+			student.setDob(Date.valueOf(req.getParameter("dob")));
+			student.setEmail(req.getParameter("email"));
+			student.setHometown(req.getParameter("hometown"));
+
+			if (message.length() > 0) {
+				req.setAttribute("student", student);
+				req.setAttribute("message", message.toString());
+				req.getRequestDispatcher("view/admin/addStudent.jsp").forward(req, resp);
+				return;
+			}
+
+			studentDAO.insert(student);
+			req.getSession().setAttribute("succeedAddMessage", "Thêm sinh viên thành công");
+			resp.sendRedirect("admin?action=studentList");
+			return;
+		} else if (action.equals("addStudent_classroom")) {
+			Student_classroomDAO student_classroomDAO = new Student_classroomDAO();
+			StudentDAO studentDAO = new StudentDAO();
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			StringBuilder message = new StringBuilder();
+
+			if (classroomDAO.findByID(req.getParameter("classroomID")) == null) {
+				message.append("Mã lớp không tồn tại<br>");
+			} else if (studentDAO.findByID(req.getParameter("studentID")) == null) {
+				message.append("Mã sinh viên không tồn tại<br>");
+			} else if (!student_classroomDAO.findByID(req.getParameter("classroomID"), req.getParameter("studentID")).isEmpty()) {
+				message.append("Sinh viên " + req.getParameter("studentID") + " đã học lớp " + req.getParameter("classroomID"));
+			} else if (student_classroomDAO.studentCount(req.getParameter("classroomID")) >= 70) {
+				message.append("Lớp " + req.getParameter("classroomID") + " đã đủ 70 sinh viên");
+			}
+
+			Student_classroom student_classroom = new Student_classroom();
+			student_classroom.setClassroomID(req.getParameter("classroomID"));
+			student_classroom.setStudentID(req.getParameter("studentID"));
+
+			if (message.length() > 0) {
+				req.setAttribute("student_classroom", student_classroom);
+				req.setAttribute("message", message.toString());
+				req.setAttribute("classroomID", req.getParameter("classroomID"));
+			    req.setAttribute("studentID", req.getParameter("studentID"));
+				req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
+				return;
+			}
+
+			student_classroomDAO.insert(student_classroom);
+			StringBuilder succeedAddMessage = new StringBuilder();
+			succeedAddMessage.append("Thêm sinh viên vào lớp thành công<br>");
+			req.setAttribute("succeedAddMessage", succeedAddMessage.toString());
+			req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("addAccount")) {
+			AccountDAO accountDAO = new AccountDAO();
+			StudentDAO studentDAO = new StudentDAO();
+			StringBuilder message = new StringBuilder();
+
+			if (accountDAO.findByID(req.getParameter("accountID")) != null) {
+				message.append("Mã tài khoản đã tồn tại<br>");
+			} else if (accountDAO.isUsernameExists(req.getParameter("username"), req.getParameter("accountID"))) {
+				message.append("Tên tài khoản đã được sử dụng<br>");
+			} else if (accountDAO.isStudentIDUsed(req.getParameter("studentID"), null, req.getParameter("role"))) {
+				message.append("Mã sinh viên đã được sử dụng<br>");
+			} else if (!studentDAO.isStudentExists(req.getParameter("studentID"), req.getParameter("role"))) {
+				message.append("Mã sinh viên không tồn tại<br>");
+			}
+
+			Account account = new Account();
+			account.setAccountID(req.getParameter("accountID"));
+			account.setUsername(req.getParameter("username"));
+			account.setPassword(req.getParameter("password"));
+			account.setRole(req.getParameter("role"));
+			account.setStudentID(req.getParameter("role").equals("student") ? req.getParameter("studentID") : null);
+
+			if (message.length() > 0) {
+				req.setAttribute("account", account);
+				req.setAttribute("message", message.toString());
+				req.getRequestDispatcher("view/admin/addAccount.jsp").forward(req, resp);
+				return;
+			}
+
+			accountDAO.insert(account);
+			req.getSession().setAttribute("succeedAddMessage", "Thêm tài khoản thành công");
+			resp.sendRedirect("admin?action=accountList");
+			return;
+		} else if (action.equals("updateTeacher")) {
+			TeacherDAO teacherDAO = new TeacherDAO();
+			StringBuilder message = new StringBuilder();
+
+			if (teacherDAO.isEmailExists(req.getParameter("email"), req.getParameter("teacherID"))) {
+				message.append("Email đã được sử dụng<br>");
+			}
+
+			Teacher teacher = new Teacher();
+			teacher.setTeacherID(req.getParameter("teacherID"));
+			teacher.setName(req.getParameter("name"));
+			teacher.setGender(req.getParameter("gender"));
+			teacher.setDob(Date.valueOf(req.getParameter("dob")));
+			teacher.setEmail(req.getParameter("email"));
+			teacher.setHometown(req.getParameter("hometown"));
+
+			if (message.length() > 0) {
+				req.setAttribute("teacher", teacher);
+				req.setAttribute("message", message.toString());
+				req.getRequestDispatcher("view/admin/updateTeacher.jsp").forward(req, resp);
+				return;
+			}
+
+			teacherDAO.update(teacher);
+			req.getSession().setAttribute("succeedUpdateMessage", "Sửa thông tin giáo viên thành công");
+			resp.sendRedirect("admin?action=teacherList");
+			return;
+		} else if (action.equals("updateClassroom")) {
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			TeacherDAO teacherDAO = new TeacherDAO();
+			StringBuilder message = new StringBuilder();
+
+			if (teacherDAO.findById(req.getParameter("teacherID")) == null) {
+				message.append("Mã giáo viên không tồn tại<br>");
+			}
+
+			Classroom classroom = new Classroom();
+			classroom.setClassroomID(req.getParameter("classroomID"));
+			classroom.setName(req.getParameter("name"));
+			classroom.setTeacherID(req.getParameter("teacherID"));
+
+			if (message.length() > 0) {
+				req.setAttribute("classroom", classroom);
+				req.setAttribute("message", message.toString());
+				req.getRequestDispatcher("view/admin/updateClassroom.jsp").forward(req, resp);
+				return;
+			}
+
+			classroomDAO.update(classroom);
+			req.getSession().setAttribute("succeedUpdateMessage", "Sửa thông tin lớp học thành công");
+			resp.sendRedirect("admin?action=classroomList");
+			return;
+		} else if (action.equals("updateStudent")) {
+			StudentDAO studentDAO = new StudentDAO();
+			StringBuilder message = new StringBuilder();
+
+			if (studentDAO.isEmailExists(req.getParameter("email"), req.getParameter("studentID"))) {
+				message.append("Email đã được sử dụng<br>");
+			}
+
+			Student student = new Student();
+			student.setStudentID(req.getParameter("studentID"));
+			student.setName(req.getParameter("name"));
+			student.setGender(req.getParameter("gender"));
+			student.setDob(Date.valueOf(req.getParameter("dob")));
+			student.setEmail(req.getParameter("email"));
+			student.setHometown(req.getParameter("hometown"));
+
+			if (message.length() > 0) {
+				req.setAttribute("student", student);
+				req.setAttribute("message", message.toString());
+				req.getRequestDispatcher("view/admin/updateStudent.jsp").forward(req, resp);
+				return;
+			}
+
+			studentDAO.update(student);
+			req.getSession().setAttribute("succeedUpdateMessage", "Sửa thông tin sinh viên thành công");
+			resp.sendRedirect("admin?action=studentList");
+			return;
+		} else if (action.equals("updateAccount")) {
+			AccountDAO accountDAO = new AccountDAO();
+			StringBuilder message = new StringBuilder();
+
+			if (accountDAO.isUsernameExists(req.getParameter("username"), req.getParameter("accountID"))) {
+				message.append("Tên tài khoản đã được sử dụng<br>");
+			}
+
+			Account account = new Account();
+			account.setAccountID(req.getParameter("accountID"));
+			account.setUsername(req.getParameter("username"));
+			account.setPassword(req.getParameter("password"));
+			account.setRole(req.getParameter("role"));
+			account.setStudentID(req.getParameter("studentID"));
+
+			if (message.length() > 0) {
+				req.setAttribute("account", account);
+				req.setAttribute("message", message.toString());
+				req.getRequestDispatcher("view/admin/updateAccount.jsp").forward(req, resp);
+				return;
+			}
+
+			accountDAO.update(account);
+			req.getSession().setAttribute("succeedUpdateMessage", "Sửa thông tin tài khoản thành công");
+			resp.sendRedirect("admin?action=accountList");
+			return;
+		} else if (action.equals("deleteTeacher")) {
+			TeacherDAO teacherDAO = new TeacherDAO();
+			teacherDAO.delete(req.getParameter("teacherID"));
+			req.getSession().setAttribute("succeedDeleteMessage", "Xóa giáo viên thành công");
+			resp.sendRedirect("admin?action=teacherList");
+			return;
+		} else if (action.equals("deleteTeachers")) {
+			String deleteCodeConfirm = req.getParameter("deleteCodeConfirm");
+			String randomCode = req.getParameter("randomCode");
+			if (deleteCodeConfirm == null || randomCode == null || !deleteCodeConfirm.trim().equals(randomCode.trim())) {
+				req.getSession().setAttribute("infoMessage", "Nhập mã xác nhận sai");
+			    resp.sendRedirect("admin?action=teacherList");
+			} else {
+				String[] teacherIds = req.getParameterValues("teacherIds");
+			    if (teacherIds != null) {
+			      TeacherDAO teacherDAO = new TeacherDAO();
+			      for (String teacherID : teacherIds) {
+			    	  teacherDAO.delete(teacherID);
+			      }
+			      req.getSession().setAttribute("succeedDeleteMessage", "Xóa giáo viên thành công");
+			      resp.sendRedirect("admin?action=teacherList");
+			    }
+			    else {
+			    	req.getSession().setAttribute("infoMessage", "Chưa có giáo viên nào được chọn");
+				    resp.sendRedirect("admin?action=teacherList");
+			    }
+			}
+		} else if (action.equals("deleteClassroom")) {
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			classroomDAO.delete(req.getParameter("classroomID"));
+			req.getSession().setAttribute("succeedDeleteMessage", "Xóa lớp học thành công");
+			resp.sendRedirect("admin?action=classroomList");
+			return;
+		} else if (action.equals("deleteClassrooms")) {
+			String deleteCodeConfirm = req.getParameter("deleteCodeConfirm");
+			String randomCode = req.getParameter("randomCode");
+			if (deleteCodeConfirm == null || randomCode == null || !deleteCodeConfirm.trim().equals(randomCode.trim())) {
+				req.getSession().setAttribute("infoMessage", "Nhập mã xác nhận sai");
+			    resp.sendRedirect("admin?action=classroomList");
+			} else {
+				String[] classroomIds = req.getParameterValues("classroomIds");
+			    if (classroomIds != null) {
+			      ClassroomDAO classroomDAO = new ClassroomDAO();
+			      for (String classroomID : classroomIds) {
+			    	  classroomDAO.delete(classroomID);
+			      }
+			      req.getSession().setAttribute("succeedDeleteMessage", "Xóa lớp học thành công");
+			      resp.sendRedirect("admin?action=classroomList");
+			    }
+			    else {
+			    	req.getSession().setAttribute("infoMessage", "Chưa có lớp học nào được chọn");
+				    resp.sendRedirect("admin?action=classroomList");
+			    }
+			}
+		} else if (action.equals("deleteStudent")) {
+			StudentDAO studentDAO = new StudentDAO();
+			studentDAO.delete(req.getParameter("studentID"));
+			req.getSession().setAttribute("succeedDeleteMessage", "Xóa sinh viên thành công");
+			resp.sendRedirect("admin?action=studentList");
+			return;
+		} else if (action.equals("deleteStudents")) {
+			String deleteCodeConfirm = req.getParameter("deleteCodeConfirm");
+			String randomCode = req.getParameter("randomCode");
+			if (deleteCodeConfirm == null || randomCode == null || !deleteCodeConfirm.trim().equals(randomCode.trim())) {
+				req.getSession().setAttribute("infoMessage", "Nhập mã xác nhận sai");
+			    resp.sendRedirect("admin?action=studentList");
+			} else {
+				String[] studentIds = req.getParameterValues("studentIds");
+			    if (studentIds != null) {
+			      StudentDAO studentDAO = new StudentDAO();
+			      for (String studentID : studentIds) {
+			    	  studentDAO.delete(studentID);
+			      }
+			      req.getSession().setAttribute("succeedDeleteMessage", "Xóa sinh viên thành công");
+			      resp.sendRedirect("admin?action=studentList");
+			    }
+			    else {
+			    	req.getSession().setAttribute("infoMessage", "Chưa có sinh viên nào được chọn");
+				    resp.sendRedirect("admin?action=studentList");
+			    }
+			}
+		} else if (action.equals("deleteStudent_classroom")) {
+			Student_classroomDAO student_classroomDAO = new Student_classroomDAO();
+			StudentDAO studentDAO = new StudentDAO();
+			ClassroomDAO classroomDAO = new ClassroomDAO();
+			StringBuilder message = new StringBuilder();
+
+			if (classroomDAO.findByID(req.getParameter("classroomID")) == null) {
+				message.append("Mã lớp không tồn tại<br>");
+			} else if (studentDAO.findByID(req.getParameter("studentID")) == null) {
+				message.append("Mã sinh viên không tồn tại<br>");
+			} else if (student_classroomDAO.findByID(req.getParameter("classroomID"), req.getParameter("studentID")).isEmpty()) {
+				message.append("Sinh viên " + req.getParameter("studentID") + " không học lớp " + req.getParameter("classroomID"));
+			}
+			
+			if (message.length() > 0) {
+				req.setAttribute("message", message.toString());
+				req.setAttribute("classroomID", req.getParameter("classroomID"));
+			    req.setAttribute("studentID", req.getParameter("studentID"));
+				req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
+				return;
+			}
+			
+			student_classroomDAO.delete(req.getParameter("classroomID"), req.getParameter("studentID"));
+			StringBuilder succeedDeleteMessage = new StringBuilder();
+			succeedDeleteMessage.append("Xóa sinh viên khỏi lớp thành công<br>");
+			req.setAttribute("succeedDeleteMessage", succeedDeleteMessage.toString());
+			req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
+			return;
+		} else if (action.equals("deleteAccount")) {
+			AccountDAO accountDAO = new AccountDAO();
+			accountDAO.delete(req.getParameter("accountID"));
+			req.getSession().setAttribute("succeedDeleteMessage", "Xóa tài khoản thành công");
+			resp.sendRedirect("admin?action=accountList");
+			return;
+		} else if (action.equals("deleteAccounts")) {
+			String deleteCodeConfirm = req.getParameter("deleteCodeConfirm");
+			String randomCode = req.getParameter("randomCode");
+			if (deleteCodeConfirm == null || randomCode == null || !deleteCodeConfirm.trim().equals(randomCode.trim())) {
+				req.getSession().setAttribute("infoMessage", "Nhập mã xác nhận sai");
+			    resp.sendRedirect("admin?action=accountList");
+			} else {
+				String[] accountIds = req.getParameterValues("accountIds");
+			    if (accountIds != null) {
+			      AccountDAO accountDAO = new AccountDAO();
+			      for (String accountID : accountIds) {
+			    	  accountDAO.delete(accountID);
+			      }
+			      req.getSession().setAttribute("succeedDeleteMessage", "Xóa tài khoản thành công");
+			      resp.sendRedirect("admin?action=accountList");
+			    }
+			    else {
+			    	req.getSession().setAttribute("infoMessage", "Chưa có tài khoản nào được chọn");
+				    resp.sendRedirect("admin?action=accountList");
+			    }
+			}
+		}
+	}
+
+}
