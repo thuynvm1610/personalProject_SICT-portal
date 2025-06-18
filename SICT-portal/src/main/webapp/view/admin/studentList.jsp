@@ -242,35 +242,41 @@
                                     <div class="pagination">
                                         <!-- Nút về trang đầu -->
                                         <c:if test="${currentPage > 1}">
-                                            <a href="admin?action=studentList&page=1">« First</a>
+                                            <a class="firstPageBtn" href="admin?action=studentList&page=1">« First</a>
                                         </c:if>
             
                                         <!-- Nút Prev -->
                                         <c:if test="${currentPage > 1}">
-                                            <a href="admin?action=studentList&page=${currentPage - 1}">‹
+                                            <a class="PrevPageBtn" href="admin?action=studentList&page=${currentPage - 1}">‹
                                                 Prev</a>
                                         </c:if>
             
                                         <!-- Các trang trong nhóm -->
-                                        <% for (int i=groupStart; i <=groupEnd; i++) { %>
+                                        <%
+                                            int notCurrentPageCnt = -1;
+                                            for (int i = groupStart; i <= groupEnd; i++) {
+                                                notCurrentPageCnt++;
+                                        %>
                                             <a href="admin?action=studentList&page=<%=i%>"
-                                                class="<%= (i == currentPage) ? " current" : "" %>">
+                                            class="<%= (i == currentPage) ? "current" : "notCurrentPage" + notCurrentPageCnt %>">
                                                 <%=i%>
                                             </a>
-                                            <% } %>
+                                        <%
+                                            }
+                                        %>
             
-                                                <!-- Nút Next -->
-                                                <c:if test="${currentPage < totalPages}">
-                                                    <a
-                                                        href="admin?action=studentList&page=${currentPage + 1}">Next
-                                                        ›</a>
-                                                </c:if>
-            
-                                                <!-- Nút tới trang cuối -->
-                                                <c:if test="${currentPage < totalPages}">
-                                                    <a href="admin?action=studentList&page=${totalPages}">Last
-                                                        »</a>
-                                                </c:if>
+                                        <!-- Nút Next -->
+                                        <c:if test="${currentPage < totalPages}">
+                                            <a class="nextPageBtn"
+                                                href="admin?action=studentList&page=${currentPage + 1}">Next
+                                                ›</a>
+                                        </c:if>
+    
+                                        <!-- Nút tới trang cuối -->
+                                        <c:if test="${currentPage < totalPages}">
+                                            <a class="lastPageBtn" href="admin?action=studentList&page=${totalPages}">Last
+                                                »</a>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
