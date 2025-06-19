@@ -1,8 +1,12 @@
 package controller;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -210,6 +214,49 @@ public class AdminController extends HttpServlet {
 			req.setAttribute("hometownList", hometownList);
 			req.getSession().setAttribute("studentList", studentList);
 			req.getRequestDispatcher("view/admin/studentList.jsp").forward(req, resp);
+		} else if (action.equals("exportStudents")) {
+		    HttpSession session = req.getSession();
+		    List<Student> studentList = (List<Student>) session.getAttribute("studentList");
+
+		    if (studentList == null || studentList.isEmpty()) {
+		        resp.setContentType("text/plain; charset=UTF-8");
+		        resp.getWriter().write("Không có dữ liệu để xuất.");
+		        return;
+		    }
+
+		    resp.setContentType("text/csv; charset=UTF-8");
+		    resp.setHeader("Content-Disposition", "attachment;filename=student_list.csv");
+
+		    OutputStream out = resp.getOutputStream();
+		    // Ghi BOM để Excel hiểu UTF-8
+		    out.write(0xEF);
+		    out.write(0xBB);
+		    out.write(0xBF);
+
+		    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
+
+		    writer.println("Mã SV,Họ và tên,Giới tính,Ngày sinh,Email,Quê quán");
+
+		    // Định dạng ngày sinh
+		    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+		    for (Student s : studentList) {
+		        String dobFormatted = "";
+		        if (s.getDob() != null) {
+		            dobFormatted = sdf.format(s.getDob());
+		        }
+
+		        writer.printf("%s,%s,%s,%s,%s,%s\n",
+		                s.getStudentID(),
+		                s.getName(),
+		                s.getGender(),
+		                dobFormatted,
+		                s.getEmail(),
+		                s.getHometown());
+		    }
+
+		    writer.flush();
+		    writer.close();
 		} else if (action.equals("student_classroom")) {
 			req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
 			return;
@@ -279,12 +326,18 @@ public class AdminController extends HttpServlet {
 	        resp.setContentType("text/csv");
 	        resp.setHeader("Content-Disposition", "attachment;filename=account_list.csv");
 
-	        PrintWriter writer = resp.getWriter();
+	        OutputStream out = resp.getOutputStream();
+		    // Ghi BOM để Excel hiểu UTF-8
+		    out.write(0xEF);
+		    out.write(0xBB);
+		    out.write(0xBF);
 
-	        writer.println("ID,Username,Email,Role");
+		    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
+
+	        writer.println("Mã TK,Tên TK,Mật khẩu,Quyền đăng nhập,Mã SV");
 
 	        for (Account acc : accountList) {
-	            writer.printf("%s,%s,%s,%s\n",
+	            writer.printf("%s,%s,%s,%s,%s\n",
 	                    acc.getAccountID(), acc.getUsername(), acc.getPassword(), acc.getRole(), acc.getStudentID());
 	        }
 
