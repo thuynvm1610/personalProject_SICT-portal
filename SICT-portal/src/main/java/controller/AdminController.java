@@ -134,6 +134,7 @@ public class AdminController extends HttpServlet {
 
 	        writer.flush();
 	        writer.close();
+	        return;
 		} else if (action.equals("classroomList")) {
 			ClassroomDAO classroomDAO = new ClassroomDAO();
 			
@@ -210,6 +211,7 @@ public class AdminController extends HttpServlet {
 
 	        writer.flush();
 	        writer.close();
+	        return;
 		} else if (action.equals("studentList")) {
 			StudentDAO studentDAO = new StudentDAO();
 			int recordsPerPage = 30;
@@ -308,6 +310,7 @@ public class AdminController extends HttpServlet {
 
 		    writer.flush();
 		    writer.close();
+		    return;
 		} else if (action.equals("student_classroom")) {
 			req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
 			return;
@@ -321,8 +324,15 @@ public class AdminController extends HttpServlet {
 			    currentPage = Integer.parseInt(pageStr);
 			}
 			int start = (currentPage - 1) * recordsPerPage;
-
-			List<Account> accountList = accountDAO.getAccountsPaginated(start, recordsPerPage);
+			
+			List<Account> accountList = new ArrayList<Account>();
+			Boolean isSearchAccFunctionUse = (Boolean) req.getSession().getAttribute("isSearchAccFunctionUse");
+		    if (isSearchAccFunctionUse != null && isSearchAccFunctionUse) {
+		        accountList = (List<Account>) req.getSession().getAttribute("accountList");
+		        req.getSession().removeAttribute("isSearchAccFunctionUse");
+		    } else {
+		        accountList = accountDAO.getAccountsPaginated(start, recordsPerPage);
+		    }
 			int totalRecords = accountDAO.countAccounts();
 			int totalPages = (int) Math.ceil(totalRecords * 1.0 / recordsPerPage);
 
@@ -369,31 +379,31 @@ public class AdminController extends HttpServlet {
 	        List<Account> accountList = (List<Account>) session.getAttribute("accountList");
 
 	        if (accountList == null || accountList.isEmpty()) {
-	            resp.setContentType("text/plain");
-	            resp.getWriter().write("Không có dữ liệu để xuất.");
-	            return;
+				req.getSession().setAttribute("infoMessage", "Không có dữ liệu để xuất file");
+				resp.sendRedirect("admin?action=accountList");
+	        } else {
+	        	resp.setContentType("text/csv");
+		        resp.setHeader("Content-Disposition", "attachment;filename=account_list.csv");
+
+		        OutputStream out = resp.getOutputStream();
+			    // Ghi BOM để Excel hiểu UTF-8
+			    out.write(0xEF);
+			    out.write(0xBB);
+			    out.write(0xBF);
+
+			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
+
+		        writer.println("Mã TK,Tên TK,Mật khẩu,Quyền đăng nhập,Mã SV");
+
+		        for (Account acc : accountList) {
+		            writer.printf("%s,%s,%s,%s,%s\n",
+		                    acc.getAccountID(), acc.getUsername(), acc.getPassword(), acc.getRole(), acc.getStudentID());
+		        }
+
+		        writer.flush();
+		        writer.close();
 	        }
-
-	        resp.setContentType("text/csv");
-	        resp.setHeader("Content-Disposition", "attachment;filename=account_list.csv");
-
-	        OutputStream out = resp.getOutputStream();
-		    // Ghi BOM để Excel hiểu UTF-8
-		    out.write(0xEF);
-		    out.write(0xBB);
-		    out.write(0xBF);
-
-		    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
-
-	        writer.println("Mã TK,Tên TK,Mật khẩu,Quyền đăng nhập,Mã SV");
-
-	        for (Account acc : accountList) {
-	            writer.printf("%s,%s,%s,%s,%s\n",
-	                    acc.getAccountID(), acc.getUsername(), acc.getPassword(), acc.getRole(), acc.getStudentID());
-	        }
-
-	        writer.flush();
-	        writer.close();
+	        return;
 		} else if (action.equals("searchTeacher")) {
 			String teacherID = req.getParameter("teacherID");
 			TeacherDAO teacherDAO = new TeacherDAO();
@@ -508,12 +518,14 @@ public class AdminController extends HttpServlet {
 			AccountDAO accountDAO = new AccountDAO();
 			Account account = accountDAO.findByID(accountID);
 			if (account != null) {
-				req.setAttribute("accountList", List.of(account));
+				req.getSession().setAttribute("accountList", List.of(account));
 			} else {
-				req.setAttribute("message", "Không tìm thấy tài khoản " + accountID);
-				req.setAttribute("accountList", List.of());
+				req.getSession().setAttribute("infoMessage", "Không tìm thấy tài khoản " + accountID);
+				req.getSession().setAttribute("accountList", List.of());
 			}
-			req.getRequestDispatcher("view/admin/accountList.jsp").forward(req, resp);
+			boolean isSearchAccFunctionUse = true;
+			req.getSession().setAttribute("isSearchAccFunctionUse", isSearchAccFunctionUse);
+			resp.sendRedirect("admin?action=accountList");
 			return;
 		} else if (action.equals("addTeacherForm")) {
 			TeacherDAO teacherDAO = new TeacherDAO();
