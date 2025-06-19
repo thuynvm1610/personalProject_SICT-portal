@@ -52,8 +52,16 @@ public class AdminController extends HttpServlet {
 			}
 			int start = (currentPage - 1) * recordsPerPage;
 
-			List<Teacher> teacherList = teacherDAO.getTeachersPaginated(start, recordsPerPage);
-			int totalRecords = teacherDAO.countTeachers();
+			List<Teacher> teacherList = new ArrayList<Teacher>();
+			Boolean isSearchTeacherFunctionUse = (Boolean) req.getSession().getAttribute("isSearchTeacherFunctionUse");
+		    if (isSearchTeacherFunctionUse != null && isSearchTeacherFunctionUse) {
+		    	teacherList = (List<Teacher>) req.getSession().getAttribute("teacherList");
+		        req.getSession().removeAttribute("isSearchTeacherFunctionUse");
+		    } else {
+				teacherList = teacherDAO.getTeachersPaginated(start, recordsPerPage);
+		    }
+			
+		    int totalRecords = teacherDAO.countTeachers();
 			int totalPages = (int) Math.ceil(totalRecords * 1.0 / recordsPerPage);
 
 			req.setAttribute("teacherList", teacherList);
@@ -109,31 +117,30 @@ public class AdminController extends HttpServlet {
 	        List<Teacher> teacherList = (List<Teacher>) session.getAttribute("teacherList");
 
 	        if (teacherList == null || teacherList.isEmpty()) {
-	            resp.setContentType("text/plain");
-	            resp.getWriter().write("Không có dữ liệu để xuất.");
-	            return;
+	            req.getSession().setAttribute("infoMessage", "Không có dữ liệu để xuất file");
+	            resp.sendRedirect("admin?action=teacherList");
+	        } else {
+	        	resp.setContentType("text/csv");
+		        resp.setHeader("Content-Disposition", "attachment;filename=teacher_list.csv");
+
+		        OutputStream out = resp.getOutputStream();
+			    // Ghi BOM để Excel hiểu UTF-8
+			    out.write(0xEF);
+			    out.write(0xBB);
+			    out.write(0xBF);
+
+			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
+
+		        writer.println("Mã GV,Họ và tên,Giới tính,Ngày sinh,Email,Quê quán");
+
+		        for (Teacher t : teacherList) {
+		            writer.printf("%s,%s,%s,%s,%s,%s\n",
+		                    t.getTeacherID(), t.getName(), t.getGender(), t.getDob(), t.getEmail(), t.getHometown());
+		        }
+
+		        writer.flush();
+		        writer.close();
 	        }
-
-	        resp.setContentType("text/csv");
-	        resp.setHeader("Content-Disposition", "attachment;filename=teacher_list.csv");
-
-	        OutputStream out = resp.getOutputStream();
-		    // Ghi BOM để Excel hiểu UTF-8
-		    out.write(0xEF);
-		    out.write(0xBB);
-		    out.write(0xBF);
-
-		    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
-
-	        writer.println("Mã GV,Họ và tên,Giới tính,Ngày sinh,Email,Quê quán");
-
-	        for (Teacher t : teacherList) {
-	            writer.printf("%s,%s,%s,%s,%s,%s\n",
-	                    t.getTeacherID(), t.getName(), t.getGender(), t.getDob(), t.getEmail(), t.getHometown());
-	        }
-
-	        writer.flush();
-	        writer.close();
 	        return;
 		} else if (action.equals("classroomList")) {
 			ClassroomDAO classroomDAO = new ClassroomDAO();
@@ -416,12 +423,14 @@ public class AdminController extends HttpServlet {
 			TeacherDAO teacherDAO = new TeacherDAO();
 			Teacher teacher = teacherDAO.findById(teacherID);
 			if (teacher != null) {
-				req.setAttribute("teacherList", List.of(teacher));
+				req.getSession().setAttribute("teacherList", List.of(teacher));
 			} else {
-				req.setAttribute("message", "Không tìm thấy giáo viên " + teacherID);
-				req.setAttribute("teacherList", List.of());
+				req.getSession().setAttribute("infoMessage", "Không tìm thấy giáo viên " + teacherID);
+				req.getSession().setAttribute("teacherList", List.of());
 			}
-			req.getRequestDispatcher("view/admin/teacherList.jsp").forward(req, resp);
+			boolean isSearchTeacherFunctionUse = true;
+			req.getSession().setAttribute("isSearchTeacherFunctionUse", isSearchTeacherFunctionUse);
+			resp.sendRedirect("admin?action=teacherList");
 			return;
 		} else if (action.equals("searchClassroom")) {
 			String classroomID = req.getParameter("classroomID");
