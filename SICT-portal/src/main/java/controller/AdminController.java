@@ -223,7 +223,15 @@ public class AdminController extends HttpServlet {
 			}
 			int start = (currentPage - 1) * recordsPerPage;
 
-			List<Student> studentList = studentDAO.getStudentsPaginated(start, recordsPerPage);
+			List<Student> studentList = new ArrayList<Student>();
+			Boolean isSearchStudentFunctionUse = (Boolean) req.getSession().getAttribute("isSearchStudentFunctionUse");
+		    if (isSearchStudentFunctionUse != null && isSearchStudentFunctionUse) {
+		    	studentList = (List<Student>) req.getSession().getAttribute("studentList");
+		        req.getSession().removeAttribute("isSearchStudentFunctionUse");
+		    } else {
+		    	studentList = studentDAO.getStudentsPaginated(start, recordsPerPage);
+		    }
+			
 			int totalRecords = studentDAO.countStudents();
 			int totalPages = (int) Math.ceil(totalRecords * 1.0 / recordsPerPage);
 
@@ -280,36 +288,35 @@ public class AdminController extends HttpServlet {
 		    List<Student> studentList = (List<Student>) session.getAttribute("studentList");
 
 		    if (studentList == null || studentList.isEmpty()) {
-		        resp.setContentType("text/plain; charset=UTF-8");
-		        resp.getWriter().write("Không có dữ liệu để xuất.");
-		        return;
+		        req.getSession().setAttribute("infoMessage", "Không có dữ liệu để xuất file");
+		        resp.sendRedirect("admin?action=studentList");
+		    } else {
+		    	resp.setContentType("text/csv; charset=UTF-8");
+			    resp.setHeader("Content-Disposition", "attachment;filename=student_list.csv");
+
+			    OutputStream out = resp.getOutputStream();
+			    // Ghi BOM để Excel hiểu UTF-8
+			    out.write(0xEF);
+			    out.write(0xBB);
+			    out.write(0xBF);
+
+			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
+
+			    writer.println("Mã SV,Họ và tên,Giới tính,Ngày sinh,Email,Quê quán");
+
+			    for (Student s : studentList) {
+			        writer.printf("%s,%s,%s,%s,%s,%s\n",
+			                s.getStudentID(),
+			                s.getName(),
+			                s.getGender(),
+			                s.getDob(),
+			                s.getEmail(),
+			                s.getHometown());
+			    }
+
+			    writer.flush();
+			    writer.close();
 		    }
-
-		    resp.setContentType("text/csv; charset=UTF-8");
-		    resp.setHeader("Content-Disposition", "attachment;filename=student_list.csv");
-
-		    OutputStream out = resp.getOutputStream();
-		    // Ghi BOM để Excel hiểu UTF-8
-		    out.write(0xEF);
-		    out.write(0xBB);
-		    out.write(0xBF);
-
-		    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
-
-		    writer.println("Mã SV,Họ và tên,Giới tính,Ngày sinh,Email,Quê quán");
-
-		    for (Student s : studentList) {
-		        writer.printf("%s,%s,%s,%s,%s,%s\n",
-		                s.getStudentID(),
-		                s.getName(),
-		                s.getGender(),
-		                s.getDob(),
-		                s.getEmail(),
-		                s.getHometown());
-		    }
-
-		    writer.flush();
-		    writer.close();
 		    return;
 		} else if (action.equals("student_classroom")) {
 			req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
@@ -433,12 +440,14 @@ public class AdminController extends HttpServlet {
 			StudentDAO studentDAO = new StudentDAO();
 			Student student = studentDAO.findByID(studentID);
 			if (student != null) {
-				req.setAttribute("studentList", List.of(student));
+				req.getSession().setAttribute("studentList", List.of(student));
 			} else {
-				req.setAttribute("message", "Không tìm thấy sinh viên " + studentID);
-				req.setAttribute("studentList", List.of());
+				req.getSession().setAttribute("infoMessage", "Không tìm thấy sinh viên " + studentID);
+				req.getSession().setAttribute("studentList", List.of());
 			}
-			req.getRequestDispatcher("view/admin/studentList.jsp").forward(req, resp);
+			boolean isSearchStudentFunctionUse = true;
+			req.getSession().setAttribute("isSearchStudentFunctionUse", isSearchStudentFunctionUse);
+			resp.sendRedirect("admin?action=studentList");
 			return;
 		} else if (action.equals("searchClassroomListByTeacherID")) {
 			String teacherID = req.getParameter("teacherID");
