@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -265,6 +266,30 @@ public class AdminController extends HttpServlet {
 			accountList = accountDAO.accountListByRole(role);
 			req.getSession().setAttribute("accountList", accountList);
 			req.getRequestDispatcher("view/admin/accountList.jsp").forward(req, resp);
+		} else if (action.equals("exportAccounts")) {
+			HttpSession session = req.getSession();
+	        List<Account> accountList = (List<Account>) session.getAttribute("accountList");
+
+	        if (accountList == null || accountList.isEmpty()) {
+	            resp.setContentType("text/plain");
+	            resp.getWriter().write("Không có dữ liệu để xuất.");
+	            return;
+	        }
+
+	        resp.setContentType("text/csv");
+	        resp.setHeader("Content-Disposition", "attachment;filename=account_list.csv");
+
+	        PrintWriter writer = resp.getWriter();
+
+	        writer.println("ID,Username,Email,Role");
+
+	        for (Account acc : accountList) {
+	            writer.printf("%s,%s,%s,%s\n",
+	                    acc.getAccountID(), acc.getUsername(), acc.getPassword(), acc.getRole(), acc.getStudentID());
+	        }
+
+	        writer.flush();
+	        writer.close();
 		} else if (action.equals("searchTeacher")) {
 			String teacherID = req.getParameter("teacherID");
 			TeacherDAO teacherDAO = new TeacherDAO();

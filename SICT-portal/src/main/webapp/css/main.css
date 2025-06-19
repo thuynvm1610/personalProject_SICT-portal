@@ -192,6 +192,32 @@
 	background-color: rgba(0, 123, 255, 0.5);
 }
 
+.export-btn__container {
+	margin: 0px 30px 0px auto;
+	cursor: pointer;
+}
+
+.export-btn {
+    padding: 6px 12px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+    border: none;
+}
+
+.export-btn:hover {
+    background-color: #218838;
+    text-decoration: none;
+    color: white;
+}
+
+.export-btn i {
+    margin-right: 8px;
+}
+
 .alert-error {
 	background-color: #ffe0e0;
 	color: #d8000c;
