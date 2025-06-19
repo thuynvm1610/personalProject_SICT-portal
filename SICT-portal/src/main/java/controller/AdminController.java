@@ -154,7 +154,15 @@ public class AdminController extends HttpServlet {
 			}
 			int start = (currentPage - 1) * recordsPerPage;
 
-			List<Classroom> classroomList = classroomDAO.getClassroomsPaginated(start, recordsPerPage);
+			List<Classroom> classroomList = new ArrayList<Classroom>();
+			Boolean isSearchClassroomFunctionUse = (Boolean) req.getSession().getAttribute("isSearchClassroomFunctionUse");
+		    if (isSearchClassroomFunctionUse != null && isSearchClassroomFunctionUse) {
+		    	classroomList = (List<Classroom>) req.getSession().getAttribute("classroomList");
+		        req.getSession().removeAttribute("isSearchClassroomFunctionUse");
+		    } else {
+				classroomList = classroomDAO.getClassroomsPaginated(start, recordsPerPage);
+		    }
+			
 			int totalRecords = classroomDAO.countClassrooms();
 			int totalPages = (int) Math.ceil(totalRecords * 1.0 / recordsPerPage);
 
@@ -193,31 +201,30 @@ public class AdminController extends HttpServlet {
 	        List<Classroom> classroomList = (List<Classroom>) session.getAttribute("classroomList");
 
 	        if (classroomList == null || classroomList.isEmpty()) {
-	            resp.setContentType("text/plain");
-	            resp.getWriter().write("Không có dữ liệu để xuất.");
-	            return;
+	            req.getSession().setAttribute("infoMessage", "Không có dữ liệu để xuất");
+	            resp.sendRedirect("admin?action=classroomList");
+	        } else {
+	        	resp.setContentType("text/csv");
+		        resp.setHeader("Content-Disposition", "attachment;filename=classroom_list.csv");
+
+		        OutputStream out = resp.getOutputStream();
+			    // Ghi BOM để Excel hiểu UTF-8
+			    out.write(0xEF);
+			    out.write(0xBB);
+			    out.write(0xBF);
+
+			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
+
+		        writer.println("Mã lớp,Tên lớp,Mã GV");
+
+		        for (Classroom c : classroomList) {
+		            writer.printf("%s,%s,%s\n",
+		                    c.getClassroomID(), c.getName(), c.getTeacherID());
+		        }
+
+		        writer.flush();
+		        writer.close();
 	        }
-
-	        resp.setContentType("text/csv");
-	        resp.setHeader("Content-Disposition", "attachment;filename=classroom_list.csv");
-
-	        OutputStream out = resp.getOutputStream();
-		    // Ghi BOM để Excel hiểu UTF-8
-		    out.write(0xEF);
-		    out.write(0xBB);
-		    out.write(0xBF);
-
-		    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
-
-	        writer.println("Mã lớp,Tên lớp,Mã GV");
-
-	        for (Classroom c : classroomList) {
-	            writer.printf("%s,%s,%s\n",
-	                    c.getClassroomID(), c.getName(), c.getTeacherID());
-	        }
-
-	        writer.flush();
-	        writer.close();
 	        return;
 		} else if (action.equals("studentList")) {
 			StudentDAO studentDAO = new StudentDAO();
@@ -437,12 +444,14 @@ public class AdminController extends HttpServlet {
 			ClassroomDAO classroomDAO = new ClassroomDAO();
 			Classroom classroom = classroomDAO.findByID(classroomID);
 			if (classroom != null) {
-				req.setAttribute("classroomList", List.of(classroom));
+				req.getSession().setAttribute("classroomList", List.of(classroom));
 			} else {
-				req.setAttribute("message", "Không tìm thấy lớp học " + classroomID);
-				req.setAttribute("classroomList", List.of());
+				req.getSession().setAttribute("infoMessage", "Không tìm thấy lớp học " + classroomID);
+				req.getSession().setAttribute("classroomList", List.of());
 			}
-			req.getRequestDispatcher("view/admin/classroomList.jsp").forward(req, resp);
+			boolean isSearchClassroomFunctionUse = true;
+			req.getSession().setAttribute("isSearchClassroomFunctionUse", isSearchClassroomFunctionUse);
+			resp.sendRedirect("admin?action=classroomList");
 			return;
 		} else if (action.equals("searchStudent")) {
 			String studentID = req.getParameter("studentID");
