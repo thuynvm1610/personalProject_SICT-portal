@@ -105,6 +105,36 @@ public class AdminController extends HttpServlet {
 			req.setAttribute("hometownList", hometownList);
 			req.getSession().setAttribute("teacherList", teacherList);
 			req.getRequestDispatcher("view/admin/teacherList.jsp").forward(req, resp);
+		} else if (action.equals("exportTeachers")) {
+			HttpSession session = req.getSession();
+	        List<Teacher> teacherList = (List<Teacher>) session.getAttribute("teacherList");
+
+	        if (teacherList == null || teacherList.isEmpty()) {
+	            resp.setContentType("text/plain");
+	            resp.getWriter().write("Không có dữ liệu để xuất.");
+	            return;
+	        }
+
+	        resp.setContentType("text/csv");
+	        resp.setHeader("Content-Disposition", "attachment;filename=teacher_list.csv");
+
+	        OutputStream out = resp.getOutputStream();
+		    // Ghi BOM để Excel hiểu UTF-8
+		    out.write(0xEF);
+		    out.write(0xBB);
+		    out.write(0xBF);
+
+		    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
+
+	        writer.println("Mã GV,Họ và tên,Giới tính,Ngày sinh,Email,Quê quán");
+
+	        for (Teacher t : teacherList) {
+	            writer.printf("%s,%s,%s,%s,%s,%s\n",
+	                    t.getTeacherID(), t.getName(), t.getGender(), t.getDob(), t.getEmail(), t.getHometown());
+	        }
+
+	        writer.flush();
+	        writer.close();
 		} else if (action.equals("classroomList")) {
 			ClassroomDAO classroomDAO = new ClassroomDAO();
 			
