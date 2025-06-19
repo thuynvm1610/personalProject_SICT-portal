@@ -109,6 +109,14 @@
                     <div>
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h2>Quản lý thông tin lớp học</h2>
+                            <div class="export-btn__container">
+                                <form method="get" action="admin">
+                                    <input type="hidden" name="action" value="exportClassrooms" />
+                                    <button type="submit" class="export-btn">
+                                        <i class="fa-solid fa-file-arrow-down"></i> Xuất Excel
+                                    </button>
+                                </form>
+                            </div>
                             <form method="get" action="admin">
                                 <input type="hidden" name="action" value="addClassroomForm" />
                                 <button class="btn btn-primary" type="submit">

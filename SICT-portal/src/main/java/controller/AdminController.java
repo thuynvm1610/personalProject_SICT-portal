@@ -6,7 +6,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -181,6 +180,36 @@ public class AdminController extends HttpServlet {
 			}
 			req.getRequestDispatcher("view/admin/classroomList.jsp").forward(req, resp);
 			return;
+		} else if (action.equals("exportClassrooms")) {
+			HttpSession session = req.getSession();
+	        List<Classroom> classroomList = (List<Classroom>) session.getAttribute("classroomList");
+
+	        if (classroomList == null || classroomList.isEmpty()) {
+	            resp.setContentType("text/plain");
+	            resp.getWriter().write("Không có dữ liệu để xuất.");
+	            return;
+	        }
+
+	        resp.setContentType("text/csv");
+	        resp.setHeader("Content-Disposition", "attachment;filename=classroom_list.csv");
+
+	        OutputStream out = resp.getOutputStream();
+		    // Ghi BOM để Excel hiểu UTF-8
+		    out.write(0xEF);
+		    out.write(0xBB);
+		    out.write(0xBF);
+
+		    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
+
+	        writer.println("Mã lớp,Tên lớp,Mã GV");
+
+	        for (Classroom c : classroomList) {
+	            writer.printf("%s,%s,%s\n",
+	                    c.getClassroomID(), c.getName(), c.getTeacherID());
+	        }
+
+	        writer.flush();
+	        writer.close();
 		} else if (action.equals("studentList")) {
 			StudentDAO studentDAO = new StudentDAO();
 			int recordsPerPage = 30;
@@ -267,20 +296,12 @@ public class AdminController extends HttpServlet {
 
 		    writer.println("Mã SV,Họ và tên,Giới tính,Ngày sinh,Email,Quê quán");
 
-		    // Định dạng ngày sinh
-		    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
 		    for (Student s : studentList) {
-		        String dobFormatted = "";
-		        if (s.getDob() != null) {
-		            dobFormatted = sdf.format(s.getDob());
-		        }
-
 		        writer.printf("%s,%s,%s,%s,%s,%s\n",
 		                s.getStudentID(),
 		                s.getName(),
 		                s.getGender(),
-		                dobFormatted,
+		                s.getDob(),
 		                s.getEmail(),
 		                s.getHometown());
 		    }
