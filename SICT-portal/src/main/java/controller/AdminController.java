@@ -561,6 +561,7 @@ public class AdminController extends HttpServlet {
 			resp.sendRedirect("admin?action=studentList");
 			return;
 		} else if (action.equals("searchClassroomListByTeacherID")) {
+			req.getSession().removeAttribute("classroomList");
 			String teacherID = req.getParameter("teacherID");
 			ClassroomDAO classroomDAO = new ClassroomDAO();
 			List<Classroom> classroomList = classroomDAO.findByTeacherID(teacherID);
@@ -574,6 +575,7 @@ public class AdminController extends HttpServlet {
 			}
 			return;
 		} else if (action.equals("searchClassroomListByStudentID")) {
+			req.getSession().removeAttribute("classroomList");
 			String studentID = req.getParameter("studentID");
 			Student_classroomDAO student_classroomDAO = new Student_classroomDAO();
 			List<Student_classroom> student_classroomList = student_classroomDAO.findByID(null, studentID);
@@ -598,28 +600,31 @@ public class AdminController extends HttpServlet {
 			}
 			return;
 		} else if (action.equals("searchStudentListByClassroomID")) {
+			req.getSession().removeAttribute("studentList");
 			String classroomID = req.getParameter("classroomID");
 			Student_classroomDAO student_classroomDAO = new Student_classroomDAO();
 			List<Student_classroom> student_classroomList = student_classroomDAO.findByID(classroomID, null);
-			List<Student> studentList = new ArrayList<>();
-			StudentDAO studentDAO = new StudentDAO();
-			for (int i = 0; i < student_classroomList.size(); i++) {
-				String studentID = student_classroomList.get(i).getStudentID();
-				String studentName = studentDAO.getStudentName(studentID);
-				Student student = new Student();
-				student.setStudentID(studentID);
-				student.setName(studentName);
-				student.setDob(null);
-				student.setEmail(null);
-				student.setGender(null);
-				studentList.add(student);
-			}
-			req.getSession().setAttribute("studentList", studentList);
-			req.setAttribute("classroomID", classroomID);
 			if (student_classroomList.isEmpty()) {
 				req.setAttribute("message", "Lớp " + req.getParameter("classroomID") + " hiện chưa có sinh viên nào");
+				req.getRequestDispatcher("view/admin/studentListByClassroomID.jsp").forward(req, resp);
+			} else {
+				List<Student> studentList = new ArrayList<>();
+				StudentDAO studentDAO = new StudentDAO();
+				for (int i = 0; i < student_classroomList.size(); i++) {
+					String studentID = student_classroomList.get(i).getStudentID();
+					String studentName = studentDAO.getStudentName(studentID);
+					Student student = new Student();
+					student.setStudentID(studentID);
+					student.setName(studentName);
+					student.setDob(null);
+					student.setEmail(null);
+					student.setGender(null);
+					studentList.add(student);
+				}
+				req.getSession().setAttribute("studentList", studentList);
+				req.setAttribute("classroomID", classroomID);
+				req.getRequestDispatcher("view/admin/studentListByClassroomID.jsp").forward(req, resp);
 			}
-			req.getRequestDispatcher("view/admin/studentListByClassroomID.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("searchAccount")) {
 			String accountID = req.getParameter("accountID");
