@@ -366,6 +366,68 @@ public class AdminController extends HttpServlet {
 			    writer.close();
 		    }
 		    return;
+		} else if (action.equals("exportClassroomsByTeacher")) {
+		    HttpSession session = req.getSession();
+		    List<Classroom> classroomList = (List<Classroom>) session.getAttribute("classroomList");
+
+		    if (classroomList == null || classroomList.isEmpty()) {
+		        req.getSession().setAttribute("infoMessage", "Không có dữ liệu để xuất file");
+		        resp.sendRedirect("admin?action=studentList");
+		    } else {
+		    	resp.setContentType("text/csv; charset=UTF-8");
+			    resp.setHeader("Content-Disposition", "attachment;filename=classroom_list_by_teacher.csv");
+
+			    OutputStream out = resp.getOutputStream();
+			    // Ghi BOM để Excel hiểu UTF-8
+			    out.write(0xEF);
+			    out.write(0xBB);
+			    out.write(0xBF);
+
+			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
+
+			    writer.println("Mã lớp,Tên lớp");
+
+			    for (Classroom c : classroomList) {
+			        writer.printf("%s,%s\n",
+			                c.getClassroomID(),
+			                c.getName());
+			    }
+
+			    writer.flush();
+			    writer.close();
+		    }
+		    return;
+		} else if (action.equals("exportStudentsByClassroom")) {
+		    HttpSession session = req.getSession();
+		    List<Student> studentList = (List<Student>) session.getAttribute("studentList");
+
+		    if (studentList == null || studentList.isEmpty()) {
+		        req.getSession().setAttribute("infoMessage", "Không có dữ liệu để xuất file");
+		        resp.sendRedirect("admin?action=classroomList");
+		    } else {
+		    	resp.setContentType("text/csv; charset=UTF-8");
+			    resp.setHeader("Content-Disposition", "attachment;filename=student_list_by_classroom.csv");
+
+			    OutputStream out = resp.getOutputStream();
+			    // Ghi BOM để Excel hiểu UTF-8
+			    out.write(0xEF);
+			    out.write(0xBB);
+			    out.write(0xBF);
+
+			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
+
+			    writer.println("Mã SV,Tên SV");
+
+			    for (Student s : studentList) {
+			        writer.printf("%s,%s\n",
+			                s.getStudentID(),
+			                s.getName());
+			    }
+
+			    writer.flush();
+			    writer.close();
+		    }
+		    return;
 		} else if (action.equals("accountList")) {
 			AccountDAO accountDAO = new AccountDAO();		
 			int recordsPerPage = 30;
@@ -502,66 +564,62 @@ public class AdminController extends HttpServlet {
 			String teacherID = req.getParameter("teacherID");
 			ClassroomDAO classroomDAO = new ClassroomDAO();
 			List<Classroom> classroomList = classroomDAO.findByTeacherID(teacherID);
-			req.setAttribute("classroomList", classroomList);
-			req.setAttribute("teacherID", teacherID);
 			if (classroomList.isEmpty()) {	
 				req.setAttribute("message", "Giáo viên " + teacherID + " hiện chưa dạy lớp nào");
+				req.getRequestDispatcher("view/admin/classroomListByTeacherID.jsp").forward(req, resp);
+			} else {
+				req.getSession().setAttribute("classroomList", classroomList);
+				req.setAttribute("teacherID", teacherID);
+				req.getRequestDispatcher("view/admin/classroomListByTeacherID.jsp").forward(req, resp);
 			}
-			req.getRequestDispatcher("view/admin/classroomListByTeacherID.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("searchClassroomListByStudentID")) {
 			String studentID = req.getParameter("studentID");
 			Student_classroomDAO student_classroomDAO = new Student_classroomDAO();
 			List<Student_classroom> student_classroomList = student_classroomDAO.findByID(null, studentID);
-			List<Classroom> classroomList = new ArrayList<>();
-			ClassroomDAO classroomDAO = new ClassroomDAO();
-			for (int i = 0; i < student_classroomList.size(); i++) {
-				String classroomID = student_classroomList.get(i).getClassroomID();
-				String classroomName = classroomDAO.getClassroomName(classroomID);
-				Classroom classroom = new Classroom();
-				classroom.setClassroomID(classroomID);
-				classroom.setName(classroomName);
-				classroom.setTeacherID(null);
-				classroomList.add(classroom);
-			}
-			req.getSession().setAttribute("classroomList", classroomList);
-			req.setAttribute("studentID", studentID);
 			if (student_classroomList.isEmpty()) {
 				req.setAttribute("message", "Sinh viên " + req.getParameter("studentID") + " hiện chưa học lớp nào");
+				req.getRequestDispatcher("view/admin/classroomListByStudentID.jsp").forward(req, resp);
+			} else {
+				List<Classroom> classroomList = new ArrayList<>();
+				ClassroomDAO classroomDAO = new ClassroomDAO();
+				for (int i = 0; i < student_classroomList.size(); i++) {
+					String classroomID = student_classroomList.get(i).getClassroomID();
+					String classroomName = classroomDAO.getClassroomName(classroomID);
+					Classroom classroom = new Classroom();
+					classroom.setClassroomID(classroomID);
+					classroom.setName(classroomName);
+					classroom.setTeacherID(null);
+					classroomList.add(classroom);
+				}
+				req.getSession().setAttribute("classroomList", classroomList);
+				req.setAttribute("studentID", studentID);
+				req.getRequestDispatcher("view/admin/classroomListByStudentID.jsp").forward(req, resp);
 			}
-			req.getRequestDispatcher("view/admin/classroomListByStudentID.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("searchStudentListByClassroomID")) {
 			String classroomID = req.getParameter("classroomID");
-			ClassroomDAO classroomDAO = new ClassroomDAO();
-			Classroom classroom = classroomDAO.findByID(classroomID);
-			if (classroom == null) {
-				req.setAttribute("message", "Không tìm thấy lớp học " + req.getParameter("classroomID"));
-				req.getRequestDispatcher("view/admin/student_classroom.jsp").forward(req, resp);
+			Student_classroomDAO student_classroomDAO = new Student_classroomDAO();
+			List<Student_classroom> student_classroomList = student_classroomDAO.findByID(classroomID, null);
+			List<Student> studentList = new ArrayList<>();
+			StudentDAO studentDAO = new StudentDAO();
+			for (int i = 0; i < student_classroomList.size(); i++) {
+				String studentID = student_classroomList.get(i).getStudentID();
+				String studentName = studentDAO.getStudentName(studentID);
+				Student student = new Student();
+				student.setStudentID(studentID);
+				student.setName(studentName);
+				student.setDob(null);
+				student.setEmail(null);
+				student.setGender(null);
+				studentList.add(student);
 			}
-			else {
-				Student_classroomDAO student_classroomDAO = new Student_classroomDAO();
-				List<Student_classroom> student_classroomList = student_classroomDAO.findByID(classroomID, null);
-				List<Student> studentList = new ArrayList<>();
-				StudentDAO studentDAO = new StudentDAO();
-				for (int i = 0; i < student_classroomList.size(); i++) {
-					String studentID = student_classroomList.get(i).getStudentID();
-					String studentName = studentDAO.getStudentName(studentID);
-					Student student = new Student();
-					student.setStudentID(studentID);
-					student.setName(studentName);
-					student.setDob(null);
-					student.setEmail(null);
-					student.setGender(null);
-					studentList.add(student);
-				}
-				req.setAttribute("studentList", studentList);
-				req.setAttribute("classroomID", classroomID);
-				if (student_classroomList.isEmpty()) {
-					req.setAttribute("message", "Lớp " + req.getParameter("classroomID") + " hiện chưa có sinh viên nào");
-				}
-				req.getRequestDispatcher("view/admin/studentListByClassroomID.jsp").forward(req, resp);
+			req.getSession().setAttribute("studentList", studentList);
+			req.setAttribute("classroomID", classroomID);
+			if (student_classroomList.isEmpty()) {
+				req.setAttribute("message", "Lớp " + req.getParameter("classroomID") + " hiện chưa có sinh viên nào");
 			}
+			req.getRequestDispatcher("view/admin/studentListByClassroomID.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("searchAccount")) {
 			String accountID = req.getParameter("accountID");

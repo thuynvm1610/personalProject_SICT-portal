@@ -115,6 +115,14 @@
                             <h2>Danh sách sinh viên đang học của lớp <strong>
                                     <c:out value="${classroomID}" />
                                 </strong></h2>
+                            <div class="export-btn__container" style="margin-right: 0px;">
+                                <form method="get" action="admin">
+                                    <input type="hidden" name="action" value="exportStudentsByClassroom" />
+                                    <button type="submit" class="export-btn">
+                                        <i class="fa-solid fa-file-arrow-down"></i> Xuất Excel
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
