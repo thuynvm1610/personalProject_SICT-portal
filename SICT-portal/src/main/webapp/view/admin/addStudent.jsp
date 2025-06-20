@@ -187,7 +187,7 @@
                                                             <td>${s.studentID}</td>
                                                             <td>${s.name}</td>
                                                             <td>${s.gender}</td>
-                                                            <td>${s.dob}</td>
+                                                            <td>${s.dobFormatted}</td>
                                                             <td>${s.email}</td>
                                                             <td>${s.hometown}</td>
                                                             <td>

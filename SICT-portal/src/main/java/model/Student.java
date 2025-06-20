@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 public class Student {
 
@@ -39,6 +40,12 @@ public class Student {
 		return dob;
 	}
 
+	public String getDobFormatted() {
+	    if (dob == null) return "";
+	    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	    return sdf.format(dob);
+	}
+	
 	public void setDob(Date dob) {
 		this.dob = dob;
 	}

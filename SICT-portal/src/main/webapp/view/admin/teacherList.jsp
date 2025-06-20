@@ -212,7 +212,7 @@
                                                             <td>${t.teacherID}</td>
                                                             <td>${t.name}</td>
                                                             <td>${t.gender}</td>
-                                                            <td>${t.dob}</td>
+                                                            <td>${t.dobFormatted}</td>
                                                             <td>${t.email}</td>
                                                             <td>${t.hometown}</td>
                                                             <td>
