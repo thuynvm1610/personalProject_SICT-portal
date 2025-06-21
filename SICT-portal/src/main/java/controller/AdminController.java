@@ -239,9 +239,13 @@ public class AdminController extends HttpServlet {
 
 			List<Student> studentList = new ArrayList<Student>();
 			Boolean isSearchStudentFunctionUse = (Boolean) req.getSession().getAttribute("isSearchStudentFunctionUse");
+			Boolean isStudentFilterFunctionUse = (Boolean) req.getSession().getAttribute("isStudentFilterFunctionUse");
 		    if (isSearchStudentFunctionUse != null && isSearchStudentFunctionUse) {
 		    	studentList = (List<Student>) req.getSession().getAttribute("studentList");
 		        req.getSession().removeAttribute("isSearchStudentFunctionUse");
+		    } else if (isStudentFilterFunctionUse != null && isStudentFilterFunctionUse) {
+		    	studentList = (List<Student>) req.getSession().getAttribute("studentList");
+		        req.getSession().removeAttribute("isStudentFilterFunctionUse");
 		    } else {
 		    	studentList = studentDAO.getStudentsPaginated(start, recordsPerPage);
 		    }
@@ -296,7 +300,9 @@ public class AdminController extends HttpServlet {
 			List<String> hometownList = studentDAO.getListOfHometown();
 			req.setAttribute("hometownList", hometownList);
 			req.getSession().setAttribute("studentList", studentList);
-			req.getRequestDispatcher("view/admin/studentList.jsp").forward(req, resp);
+			boolean isStudentFilterFunctionUse = true;
+			req.getSession().setAttribute("isStudentFilterFunctionUse", isStudentFilterFunctionUse);
+			resp.sendRedirect("admin?action=studentList");
 		} else if (action.equals("exportStudents")) {
 		    HttpSession session = req.getSession();
 		    List<Student> studentList = (List<Student>) session.getAttribute("studentList");
