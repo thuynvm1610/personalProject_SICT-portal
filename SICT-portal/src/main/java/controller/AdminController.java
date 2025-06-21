@@ -689,10 +689,16 @@ public class AdminController extends HttpServlet {
 			List<Account> accountList = (List<Account>) req.getSession().getAttribute("accountList");
 			int currentPage = (int) req.getSession().getAttribute("currentPage");
 			int totalPages = (int) req.getSession().getAttribute("totalPages");
+			String message = (String) req.getSession().getAttribute("message");
+			req.getSession().removeAttribute("message");
+			Account account = (Account) req.getSession().getAttribute("account");
+			req.getSession().removeAttribute("account");
 			
 			req.setAttribute("accountList", accountList);
 			req.setAttribute("currentPage", currentPage);
 			req.setAttribute("totalPages", totalPages);
+			req.setAttribute("message", message);
+			req.setAttribute("account", account);
 			
 			req.getRequestDispatcher("view/admin/addAccount.jsp").forward(req, resp);
 			return;
@@ -753,10 +759,20 @@ public class AdminController extends HttpServlet {
 			req.getRequestDispatcher("view/admin/updateStudent.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("updateAccountForm")) {
-			String accountID = req.getParameter("accountID");
-			AccountDAO accountDAO = new AccountDAO();
-			Account account = accountDAO.findByID(accountID);
-			req.setAttribute("account", account);
+			String message = (String) req.getSession().getAttribute("message");
+			req.getSession().removeAttribute("message");
+			
+			if (message == null) {
+				String accountID = req.getParameter("accountID");
+				AccountDAO accountDAO = new AccountDAO();
+				Account account = accountDAO.findByID(accountID);
+				req.setAttribute("account", account);
+			} else {
+				Account account = (Account) req.getSession().getAttribute("account");
+				req.getSession().removeAttribute("account");
+				req.setAttribute("account", account);
+			}
+			
 			List<Account> accountList = (List<Account>) req.getSession().getAttribute("accountList");
 			int currentPage = (int) req.getSession().getAttribute("currentPage");
 			int totalPages = (int) req.getSession().getAttribute("totalPages");
@@ -764,6 +780,7 @@ public class AdminController extends HttpServlet {
 			req.setAttribute("accountList", accountList);
 			req.setAttribute("currentPage", currentPage);
 			req.setAttribute("totalPages", totalPages);
+			req.setAttribute("message", message);
 			
 			req.getRequestDispatcher("view/admin/updateAccount.jsp").forward(req, resp);
 			return;
@@ -1007,9 +1024,9 @@ public class AdminController extends HttpServlet {
 			account.setStudentID(req.getParameter("role").equals("student") ? req.getParameter("studentID") : null);
 
 			if (message.length() > 0) {
-				req.setAttribute("account", account);
-				req.setAttribute("message", message.toString());
-				req.getRequestDispatcher("view/admin/addAccount.jsp").forward(req, resp);
+				req.getSession().setAttribute("account", account);
+				req.getSession().setAttribute("message", message.toString());
+				resp.sendRedirect("admin?action=addAccountForm");
 				return;
 			}
 
@@ -1112,9 +1129,9 @@ public class AdminController extends HttpServlet {
 			account.setStudentID(req.getParameter("studentID"));
 
 			if (message.length() > 0) {
-				req.setAttribute("account", account);
-				req.setAttribute("message", message.toString());
-				req.getRequestDispatcher("view/admin/updateAccount.jsp").forward(req, resp);
+				req.getSession().setAttribute("account", account);
+				req.getSession().setAttribute("message", message.toString());
+				resp.sendRedirect("admin?action=updateAccountForm");
 				return;
 			}
 
