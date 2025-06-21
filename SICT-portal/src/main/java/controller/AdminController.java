@@ -667,10 +667,16 @@ public class AdminController extends HttpServlet {
 			List<Classroom> classroomList = (List<Classroom>) req.getSession().getAttribute("classroomList");
 			int currentPage = (int) req.getSession().getAttribute("currentPage");
 			int totalPages = (int) req.getSession().getAttribute("totalPages");
+			String message = (String) req.getSession().getAttribute("message");
+			req.getSession().removeAttribute("message");
+			Classroom classroom = (Classroom) req.getSession().getAttribute("classroom");
+			req.getSession().removeAttribute("classroom");
 			
 			req.setAttribute("classroomList", classroomList);
 			req.setAttribute("currentPage", currentPage);
 			req.setAttribute("totalPages", totalPages);
+			req.setAttribute("message", message);
+			req.setAttribute("classroom", classroom);
 			
 			req.getRequestDispatcher("view/admin/addClassroom.jsp").forward(req, resp);
 			return;
@@ -744,10 +750,19 @@ public class AdminController extends HttpServlet {
 			req.getRequestDispatcher("view/admin/updateTeacher.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("updateClassroomForm")) {
-			String classroomID = req.getParameter("classroomID");
+			String message = (String) req.getSession().getAttribute("message");
+			req.getSession().removeAttribute("message");
 			ClassroomDAO classroomDAO = new ClassroomDAO();
-			Classroom classroom = classroomDAO.findByID(classroomID);
-			req.setAttribute("classroom", classroom);
+
+			if (message == null) {
+				String classroomID = req.getParameter("classroomID");
+				Classroom classroom = classroomDAO.findByID(classroomID);
+				req.setAttribute("classroom", classroom);
+			} else {
+				Classroom classroom = (Classroom) req.getSession().getAttribute("classroom");
+				req.getSession().removeAttribute("classroom");
+				req.setAttribute("classroom", classroom);
+			}
 			
 			List<Classroom> classroomList = (List<Classroom>) req.getSession().getAttribute("classroomList");
 			int currentPage = (int) req.getSession().getAttribute("currentPage");
@@ -756,6 +771,7 @@ public class AdminController extends HttpServlet {
 			req.setAttribute("classroomList", classroomList);
 			req.setAttribute("currentPage", currentPage);
 			req.setAttribute("totalPages", totalPages);
+			req.setAttribute("message", message);
 			
 			req.getRequestDispatcher("view/admin/updateClassroom.jsp").forward(req, resp);
 			return;
@@ -959,9 +975,9 @@ public class AdminController extends HttpServlet {
 			classroom.setTeacherID(req.getParameter("teacherID"));
 
 			if (message.length() > 0) {
-				req.setAttribute("classroom", classroom);
-				req.setAttribute("message", message.toString());
-				req.getRequestDispatcher("view/admin/addClassroom.jsp").forward(req, resp);
+				req.getSession().setAttribute("classroom", classroom);
+				req.getSession().setAttribute("message", message.toString());
+				resp.sendRedirect("admin?action=addClassroomForm");
 				return;
 			}
 
@@ -1107,9 +1123,9 @@ public class AdminController extends HttpServlet {
 			classroom.setTeacherID(req.getParameter("teacherID"));
 
 			if (message.length() > 0) {
-				req.setAttribute("classroom", classroom);
-				req.setAttribute("message", message.toString());
-				req.getRequestDispatcher("view/admin/updateClassroom.jsp").forward(req, resp);
+				req.getSession().setAttribute("classroom", classroom);
+				req.getSession().setAttribute("message", message.toString());
+				resp.sendRedirect("admin?action=updateClassroomForm");
 				return;
 			}
 
