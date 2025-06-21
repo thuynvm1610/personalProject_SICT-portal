@@ -441,9 +441,13 @@ public class AdminController extends HttpServlet {
 			
 			List<Account> accountList = new ArrayList<Account>();
 			Boolean isSearchAccFunctionUse = (Boolean) req.getSession().getAttribute("isSearchAccFunctionUse");
+			Boolean isAccFilterFunctionUse = (Boolean) req.getSession().getAttribute("isAccFilterFunctionUse");
 		    if (isSearchAccFunctionUse != null && isSearchAccFunctionUse) {
 		        accountList = (List<Account>) req.getSession().getAttribute("accountList");
 		        req.getSession().removeAttribute("isSearchAccFunctionUse");
+		    } else if (isAccFilterFunctionUse != null && isAccFilterFunctionUse) {
+		        accountList = (List<Account>) req.getSession().getAttribute("accountList");
+		        req.getSession().removeAttribute("isAccFilterFunctionUse");
 		    } else {
 		        accountList = accountDAO.getAccountsPaginated(start, recordsPerPage);
 		    }
@@ -487,7 +491,9 @@ public class AdminController extends HttpServlet {
 			
 			accountList = accountDAO.accountListByRole(role);
 			req.getSession().setAttribute("accountList", accountList);
-			req.getRequestDispatcher("view/admin/accountList.jsp").forward(req, resp);
+			boolean isAccFilterFunctionUse = true;
+			req.getSession().setAttribute("isAccFilterFunctionUse", isAccFilterFunctionUse);
+			resp.sendRedirect("admin?action=accountList");
 		} else if (action.equals("exportAccounts")) {
 			HttpSession session = req.getSession();
 	        List<Account> accountList = (List<Account>) session.getAttribute("accountList");
