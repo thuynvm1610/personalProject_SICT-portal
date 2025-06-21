@@ -669,20 +669,25 @@ public class AdminController extends HttpServlet {
 			req.getRequestDispatcher("view/admin/addClassroom.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("addStudentForm")) {
-			StudentDAO studentDAO = new StudentDAO();
-			List<Integer> yobList = studentDAO.getListOfYear();
-			req.setAttribute("yobList", yobList);
-			List<String> hometownList = studentDAO.getListOfHometown();
-			
 			List<Student> studentList = (List<Student>) req.getSession().getAttribute("studentList");
+			StudentDAO studentDAO = new StudentDAO();
+			List<String> hometownList = studentDAO.getListOfHometown();
+			List<Integer> yobList = studentDAO.getListOfYear();
 			int currentPage = (int) req.getSession().getAttribute("currentPage");
 			int totalPages = (int) req.getSession().getAttribute("totalPages");
+			String message = (String) req.getSession().getAttribute("message");
+			req.getSession().removeAttribute("message");
+			Student student = (Student) req.getSession().getAttribute("student");
+			req.getSession().removeAttribute("student");
 			
 			req.setAttribute("studentList", studentList);
 			req.setAttribute("currentPage", currentPage);
 			req.setAttribute("totalPages", totalPages);
-			
+			req.setAttribute("yobList", yobList);
 			req.setAttribute("hometownList", hometownList);
+			req.setAttribute("message", message);
+			req.setAttribute("student", student);
+			
 			req.getRequestDispatcher("view/admin/addStudent.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("addAccountForm")) {
@@ -739,22 +744,32 @@ public class AdminController extends HttpServlet {
 			req.getRequestDispatcher("view/admin/updateClassroom.jsp").forward(req, resp);
 			return;
 		} else if (action.equals("updateStudentForm")) {
-			String studentID = req.getParameter("studentID");
 			StudentDAO studentDAO = new StudentDAO();
-			Student student = studentDAO.findByID(studentID);
-			req.setAttribute("student", student);
-			List<Integer> yobList = studentDAO.getListOfYear();
-			req.setAttribute("yobList", yobList);
-			List<String> hometownList = studentDAO.getListOfHometown();
-			req.setAttribute("hometownList", hometownList);
+			String message = (String) req.getSession().getAttribute("message");
+			req.getSession().removeAttribute("message");
+			
+			if (message == null) {
+				String studentID = req.getParameter("studentID");
+				Student student = studentDAO.findByID(studentID);
+				req.setAttribute("student", student);
+			} else {
+				Student student = (Student) req.getSession().getAttribute("student");
+				req.getSession().removeAttribute("student");
+				req.setAttribute("student", student);
+			}
 			
 			List<Student> studentList = (List<Student>) req.getSession().getAttribute("studentList");
 			int currentPage = (int) req.getSession().getAttribute("currentPage");
 			int totalPages = (int) req.getSession().getAttribute("totalPages");
+			List<Integer> yobList = studentDAO.getListOfYear();
+			List<String> hometownList = studentDAO.getListOfHometown();
 			
 			req.setAttribute("studentList", studentList);
 			req.setAttribute("currentPage", currentPage);
 			req.setAttribute("totalPages", totalPages);
+			req.setAttribute("hometownList", hometownList);
+			req.setAttribute("yobList", yobList);
+			req.setAttribute("message", message);
 			
 			req.getRequestDispatcher("view/admin/updateStudent.jsp").forward(req, resp);
 			return;
@@ -956,9 +971,9 @@ public class AdminController extends HttpServlet {
 			student.setHometown(req.getParameter("hometown"));
 
 			if (message.length() > 0) {
-				req.setAttribute("student", student);
-				req.setAttribute("message", message.toString());
-				req.getRequestDispatcher("view/admin/addStudent.jsp").forward(req, resp);
+				req.getSession().setAttribute("student", student);
+				req.getSession().setAttribute("message", message.toString());
+				resp.sendRedirect("admin?action=addStudentForm");
 				return;
 			}
 
@@ -1103,9 +1118,9 @@ public class AdminController extends HttpServlet {
 			student.setHometown(req.getParameter("hometown"));
 
 			if (message.length() > 0) {
-				req.setAttribute("student", student);
-				req.setAttribute("message", message.toString());
-				req.getRequestDispatcher("view/admin/updateStudent.jsp").forward(req, resp);
+				req.getSession().setAttribute("student", student);
+				req.getSession().setAttribute("message", message.toString());
+				resp.sendRedirect("admin?action=updateStudentForm");
 				return;
 			}
 
