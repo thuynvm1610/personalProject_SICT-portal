@@ -54,9 +54,13 @@ public class AdminController extends HttpServlet {
 
 			List<Teacher> teacherList = new ArrayList<Teacher>();
 			Boolean isSearchTeacherFunctionUse = (Boolean) req.getSession().getAttribute("isSearchTeacherFunctionUse");
+			Boolean isTeacherFilterFunctionUse = (Boolean) req.getSession().getAttribute("isTeacherFilterFunctionUse");
 		    if (isSearchTeacherFunctionUse != null && isSearchTeacherFunctionUse) {
 		    	teacherList = (List<Teacher>) req.getSession().getAttribute("teacherList");
 		        req.getSession().removeAttribute("isSearchTeacherFunctionUse");
+		    } else if (isTeacherFilterFunctionUse != null && isTeacherFilterFunctionUse) {
+		    	teacherList = (List<Teacher>) req.getSession().getAttribute("teacherList");
+		        req.getSession().removeAttribute("isTeacherFilterFunctionUse");
 		    } else {
 				teacherList = teacherDAO.getTeachersPaginated(start, recordsPerPage);
 		    }
@@ -111,7 +115,9 @@ public class AdminController extends HttpServlet {
 			List<String> hometownList = teacherDAO.getListOfHometown();
 			req.setAttribute("hometownList", hometownList);
 			req.getSession().setAttribute("teacherList", teacherList);
-			req.getRequestDispatcher("view/admin/teacherList.jsp").forward(req, resp);
+			boolean isTeacherFilterFunctionUse = true;
+			req.getSession().setAttribute("isTeacherFilterFunctionUse", isTeacherFilterFunctionUse);
+			resp.sendRedirect("admin?action=teacherList");
 		} else if (action.equals("exportTeachers")) {
 			HttpSession session = req.getSession();
 	        List<Teacher> teacherList = (List<Teacher>) session.getAttribute("teacherList");
