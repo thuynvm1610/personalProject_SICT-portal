@@ -98,8 +98,7 @@ insert into classroom values
 ('TTCSN_01','Thực tập cơ sở ngành','GV_017'),
 ('TACNTT_01','Tiếng Anh công nghệ thông tin','GV_018'),
 ('ANM_01','An ninh mạng','GV_019'),
-('THHTPM_01','Tích hợp hệ thống phần mềm','GV_020'),
-('test','test','GV_020');
+('THHTPM_01','Tích hợp hệ thống phần mềm','GV_020');
 
 insert into student values
 ('SV_0001', 'Nguyễn Văn Minh Thủy', 'Nam', '2004-10-16', 'thuynvm1610@gmail.com', 'Hải Dương'),
