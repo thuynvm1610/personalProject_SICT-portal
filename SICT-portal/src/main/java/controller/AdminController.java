@@ -137,10 +137,10 @@ public class AdminController extends HttpServlet {
 
 			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
 
-		        writer.println("Mã GV,Họ và tên,Giới tính,Ngày sinh,Email,Quê quán");
+		        writer.println("Mã GV;Họ và tên;Giới tính;Ngày sinh;Email;Quê quán");
 
 		        for (Teacher t : teacherList) {
-		            writer.printf("%s,%s,%s,%s,%s,%s\n",
+		            writer.printf("%s;%s;%s;%s;%s;%s\n",
 		                    t.getTeacherID(), t.getName(), t.getGender(), t.getDob(), t.getEmail(), t.getHometown());
 		        }
 
@@ -221,10 +221,10 @@ public class AdminController extends HttpServlet {
 
 			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
 
-		        writer.println("Mã lớp,Tên lớp,Mã GV");
+		        writer.println("Mã lớp;Tên lớp;Mã GV");
 
 		        for (Classroom c : classroomList) {
-		            writer.printf("%s,%s,%s\n",
+		            writer.printf("%s;%s;%s\n",
 		                    c.getClassroomID(), c.getName(), c.getTeacherID());
 		        }
 
@@ -328,10 +328,10 @@ public class AdminController extends HttpServlet {
 
 			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
 
-			    writer.println("Mã SV,Họ và tên,Giới tính,Ngày sinh,Email,Quê quán");
+			    writer.println("Mã SV;Họ và tên;Giới tính;Ngày sinh;Email;Quê quán");
 
 			    for (Student s : studentList) {
-			        writer.printf("%s,%s,%s,%s,%s,%s\n",
+			        writer.printf("%s;%s;%s;%s;%s;%s\n",
 			                s.getStudentID(),
 			                s.getName(),
 			                s.getGender(),
@@ -366,10 +366,10 @@ public class AdminController extends HttpServlet {
 
 			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
 
-			    writer.println("Mã lớp,Tên lớp");
+			    writer.println("Mã lớp;Tên lớp");
 
 			    for (Classroom c : classroomList) {
-			        writer.printf("%s,%s\n",
+			        writer.printf("%s;%s\n",
 			                c.getClassroomID(),
 			                c.getName());
 			    }
@@ -397,10 +397,10 @@ public class AdminController extends HttpServlet {
 
 			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
 
-			    writer.println("Mã lớp,Tên lớp");
+			    writer.println("Mã lớp;Tên lớp");
 
 			    for (Classroom c : classroomList) {
-			        writer.printf("%s,%s\n",
+			        writer.printf("%s;%s\n",
 			                c.getClassroomID(),
 			                c.getName());
 			    }
@@ -428,10 +428,10 @@ public class AdminController extends HttpServlet {
 
 			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
 
-			    writer.println("Mã SV,Tên SV");
+			    writer.println("Mã SV;Tên SV");
 
 			    for (Student s : studentList) {
-			        writer.printf("%s,%s\n",
+			        writer.printf("%s;%s\n",
 			                s.getStudentID(),
 			                s.getName());
 			    }
@@ -525,10 +525,10 @@ public class AdminController extends HttpServlet {
 
 			    PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), true);
 
-		        writer.println("Mã TK,Tên TK,Mật khẩu,Quyền đăng nhập,Mã SV");
+		        writer.println("Mã TK;Tên TK;Mật khẩu;Quyền đăng nhập;Mã SV");
 
 		        for (Account acc : accountList) {
-		            writer.printf("%s,%s,%s,%s,%s\n",
+		            writer.printf("%s;%s;%s;%s;%s\n",
 		                    acc.getAccountID(), acc.getUsername(), acc.getPassword(), acc.getRole(), acc.getStudentID());
 		        }
 
