@@ -14,8 +14,8 @@
 
 <body>
     <c:if test="${not empty message}">
-        <div class="alert-error">
-            &#9888; ${message}
+        <div class="alert-info">
+            &#8505; ${message}
         </div>
     </c:if>
     <div class="container-fluid">
@@ -23,7 +23,7 @@
             <!-- Sidebar -->
             <div class="col-md-2 sidebar p-0">
                 <div class="text-left p-3 bg-dark">
-                    <h4 class="text-white">Hệ thống quản lý</h4>
+                    <div class="logo">SICT<span class="sub"> Portal</span></div>
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item">
@@ -49,6 +49,7 @@
                         </form>
                     </li>
                     <li class="nav-item active">
+                        <span class="active__subItem"></span>
                         <form method="get" action="admin">
                             <input type="hidden" name="action" value="studentList">
                             <button type="submit" class="sidebar-btn">
@@ -81,6 +82,17 @@
                             </button>
                         </form>
                     </li>
+                    <li class="nav-item">
+                        <form method="get" action="admin">
+                            <input type="hidden" name="action" value="student_classroom">
+                            <button type="submit" class="sidebar-btn">
+                                <div class="sidebar__icon-container">
+                                    <i class="fas fa-user-plus me-2"></i>
+                                </div>
+                                Sinh viên - Lớp học
+                            </button>
+                        </form>
+                    </li>
                     <li class="nav-item mt-3">
                         <form method="get" action="admin">
                             <input type="hidden" name="action" value="logout">
@@ -97,12 +109,20 @@
             <!-- Main content -->
             <div class="col-md-10 main-content">
                 <div class="tab-content">
-                    <!-- Classrooms Tab -->
+                    <!-- Students Tab -->
                     <div>
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h2>Danh sách lớp đang học của sinh viên <strong>
                                     <c:out value="${studentID}" />
                                 </strong></h2>
+                            <div class="export-btn__container" style="margin-right: 0px;">
+                                <form method="get" action="admin">
+                                    <input type="hidden" name="action" value="exportClassroomsByStudent" />
+                                    <button type="submit" class="export-btn">
+                                        <i class="fa-solid fa-file-arrow-down"></i> Xuất Excel
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
@@ -114,21 +134,25 @@
                                         <table class="table table-striped table-hover">
                                             <thead>
                                                 <tr>
+                                                    <th>STT</th>
                                                     <th>Mã lớp</th>
+                                                    <th>Tên lớp</th>
                                                     <th>Hành động</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <c:forEach var="sc" items="${student_classroomList}">
+                                                <c:forEach var="cl" items="${classroomList}" varStatus="loop">
                                                     <tr>
-                                                        <td>${sc.classroomID}</td>
+                                                        <td>${loop.index + 1}</td>
+                                                        <td>${cl.classroomID}</td>
+                                                        <td>${cl.name}</td>
                                                         <td>
                                                             <div style="display: flex; gap: 5px;">
                                                                 <form method="get" action="admin">
                                                                     <input type="hidden" name="action"
-                                                                        value="searchClassroomListByStudentID" />
-                                                                    <input type="hidden" name="studentID"
-                                                                        value="${s.studentID}" />
+                                                                        value="searchStudentListByClassroomID" />
+                                                                    <input type="hidden" name="classroomID"
+                                                                        value="${cl.classroomID}" />
                                                                     <button class="btn btn-sm btn-info" type="submit">
                                                                         <i class="fas fa-eye"></i>
                                                                     </button>
