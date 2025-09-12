@@ -10,6 +10,8 @@
 		<item key="isRegEx" value="false"/>
 		<item key="selection" value=""/>
 		<list key="findhistory">
+			<item value="accountList"/>
+			<item value="studentList"/>
 			<item value="classroomListByStudentID"/>
 			<item value="deleteClassroom"/>
 			<item value="updateClassroom"/>
@@ -23,8 +25,6 @@
 			<item value="deleteClassroomForm"/>
 			<item value="updateClassroomForm"/>
 			<item value="addClassroomForm"/>
-			<item value="addStudent"/>
-			<item value="addStudentForm"/>
 		</list>
 		<list key="replacehistory">
 		</list>
